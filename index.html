@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#13261e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lúa Gạo">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https:">
+<title>Widget Lúa gạo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dodac: 1;
+  --nen1: rgba(30, 58, 46, var(--dodac));
+  --nen2: rgba(19, 38, 30, var(--dodac));
+  --chu: #EEE9D8;
+  --mo: rgba(238, 233, 216, .62);
+  --vang: #E2B33C;
+  --xanh: #8CC774;
+  --do: #E8664F;
+  --vach: rgba(226, 179, 60, .18);
+  --the: rgba(238, 233, 216, .06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html,body{height:100%;background:transparent;overflow:hidden}
+body{font:400 13px/1.45 "Be Vietnam Pro","Segoe UI",sans-serif;color:var(--chu);user-select:none}
+.khung{height:100%;background:linear-gradient(165deg,var(--nen1),var(--nen2));border-radius:16px;border:1px solid var(--vach);display:flex;flex-direction:column;overflow:hidden}
+.dau{display:flex;align-items:center;gap:2px;padding:8px 10px 0}
+.keo{-webkit-app-region:drag;flex:1;height:26px;cursor:move;color:rgba(238,233,216,.4);font-size:11px;padding-left:8px;line-height:26px;letter-spacing:.02em}
+button{font:inherit;color:var(--mo);background:none;border:0;cursor:pointer;padding:3px 7px;border-radius:6px;transition:background .15s,color .15s}
+button:hover{color:var(--chu);background:rgba(238,233,216,.1)}
+button:active{transform:scale(.96)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--vang);outline-offset:1px}
+button.bat,button[aria-pressed=true]{color:var(--vang)}
+.cuon{flex:1;overflow-y:auto;padding:0 18px 18px;scrollbar-width:none}
+.cuon::-webkit-scrollbar{display:none}
+
+/* Đồng hồ: điểm nhấn chính */
+.gio{font-weight:300;font-size:66px;line-height:1;letter-spacing:-2px;font-variant-numeric:tabular-nums}
+.gio small{font-size:20px;letter-spacing:0;color:var(--vang);margin-left:4px}
+.ngay{color:var(--chu);margin:6px 0 2px;font-weight:500}
+.amlich{color:var(--mo);font-size:12px;margin-bottom:2px}
+.amlich b{font-weight:500;color:var(--vang)}
+
+section{border-top:1px solid var(--vach);padding-top:11px;margin-top:13px}
+h2{font-size:11px;font-weight:600;color:var(--vang);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;letter-spacing:.07em;text-transform:uppercase}
+h2 .ph{font-weight:400;color:var(--mo);text-transform:none;letter-spacing:0;font-size:12px;display:flex;align-items:center;gap:2px}
+.tt{color:var(--vang);font-weight:600;font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:2px 6px 2px 0;display:flex;align-items:center;gap:6px}
+.tt:hover{background:none;color:var(--chu)}
+.tt::after{content:"";width:5px;height:5px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+section.dong .tt::after{transform:rotate(-45deg)}
+section.dong .ruot{display:none}
+section.dong{padding-bottom:0}
+.trong,.loi{color:var(--mo);font-size:12px}
+.loi{color:var(--do)}
+
+.chiso{display:grid;grid-template-columns:42px 1fr 70px;align-items:center;gap:8px;margin:5px 0}
+.chiso b{font-weight:400;color:var(--mo)}
+.chiso i{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;font-size:12px}
+.thanh{height:5px;background:rgba(238,233,216,.12);border-radius:3px;overflow:hidden}
+.thanh div{height:100%;background:var(--xanh);border-radius:3px;transition:width .6s}
+.thanh div.cao{background:var(--do)}
+
+.troi{display:flex;align-items:baseline;gap:12px}
+.troi .do{font-size:34px;font-weight:300;line-height:1}
+.troi p{color:var(--mo);font-size:12px}
+.mua{display:flex;align-items:flex-end;gap:3px;height:30px;margin:10px 0 2px}
+.mua i{flex:1;background:rgba(140,199,116,.3);border-radius:2px 2px 0 0;min-height:2px}
+.mua i.k{background:var(--vang)}
+.mua i.n{background:#6FB6E8}
+.muaNhan{display:flex;justify-content:space-between;font-size:10px;color:var(--mo)}
+.goiY{margin-top:7px;padding:7px 9px;border-radius:8px;background:var(--the);font-size:12px;line-height:1.4}
+.goiY.canh{background:rgba(232,102,79,.16);color:#F6C3B8}
+.ba{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.ba div{background:var(--the);border-radius:8px;padding:6px 8px;font-size:12px;text-align:center}
+.ba b{display:block;font-weight:500;color:var(--vang);font-size:11px}
+.ba span{color:var(--mo);font-size:11px}
+
+.don{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:4px 0}
+.don .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.don .p{color:var(--mo);white-space:nowrap;font-size:12px}
+.tomtat{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.so{font-size:26px;font-weight:300;color:var(--chu);line-height:1}
+.chip{display:inline-block;font-size:10px;padding:0 6px;border-radius:9px;margin-right:5px;background:rgba(226,179,60,.18);color:var(--vang)}
+.chip.xong{background:rgba(140,199,116,.2);color:var(--xanh)}
+.chip.huy{background:rgba(232,102,79,.2);color:var(--do)}
+
+.gia{display:grid;grid-template-columns:1fr 86px 76px;gap:6px;margin:3px 0;align-items:center}
+.gia input[data-k=ten]{text-overflow:ellipsis}
+.khung{position:relative}
+.tabs{display:flex;gap:4px;position:sticky;top:0;z-index:4;margin:12px 0 0;padding:6px 0;background:var(--nen1);border-bottom:1px solid var(--vach)}
+.tabs button{flex:1;font-size:12px;padding:6px 2px;border-radius:8px;color:var(--mo);display:flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap}
+.tabs button[aria-selected=true]{background:rgba(226,179,60,.18);color:var(--vang)}
+.tabs .soTab{font-style:normal;font-size:10px;min-width:15px;text-align:center;border-radius:8px;background:var(--do);color:#fff;padding:0 4px;line-height:15px}
+.tabs .soTab:empty{display:none}
+.cuon[data-tab="lich"] section[data-tab]:not([data-tab="lich"]),.cuon[data-tab="ban"] section[data-tab]:not([data-tab="ban"]),
+.cuon[data-tab="viec"] section[data-tab]:not([data-tab="viec"]),.cuon[data-tab="may"] section[data-tab]:not([data-tab="may"]),
+.cuon[data-tab="tien"] section[data-tab]:not([data-tab="tien"]){display:none}
+html.web .tabs [data-tab=may]{display:none}
+#ngay{cursor:pointer}
+#ngay::after{content:" ▾";opacity:.5;font-size:11px}
+.calTab{display:flex;gap:4px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.calTab button{font-size:11px;padding:2px 9px;border:1px solid var(--vach);border-radius:12px}
+.calDieu{margin-left:auto;display:flex;gap:3px}
+.calTd{font-weight:600;margin:2px 0 6px}
+.calLuoi{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.calT{text-align:center;font-size:10px;color:var(--mo);padding:2px 0}
+.calO{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:46px;padding:2px 0;border-radius:8px;background:transparent;border:1px solid transparent}
+.calO b{font-weight:500;font-size:13px;line-height:1.2}
+.calO small{font-size:9px;color:var(--mo);line-height:1.1}
+.calO.mo{opacity:.35}
+.calO.cn b{color:#E8A090}
+.calO.nay{border-color:var(--vang)}
+.calO.chon{background:rgba(226,179,60,.2)}
+.dotNgay{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:2px;max-width:42px;min-height:5px;margin-top:2px}
+.dotNgay em{font-style:normal;font-size:8px;line-height:5px;color:var(--mo)}
+.dotNgay i,.calChuThich i{display:inline-block;width:5px;height:5px;border-radius:50%}
+i.viec{background:#8CC774} i.viec.xong,i.hoc.xong{opacity:.45} .calCt p.xongV{color:var(--mo)}
+i.le{background:var(--vang)} i.chay{background:#F2A6C0} i.hoc{background:#6FB6E8} i.no{background:var(--do)}
+.calChuThich{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:6px;font-size:10px;color:var(--mo)}
+.calChuThich i{margin-right:3px}
+.calTuan{display:grid;grid-template-columns:76px 1fr;gap:8px;padding:6px 8px;border-radius:8px;margin:3px 0;background:var(--the);text-align:left;width:100%;border:1px solid transparent;color:var(--chu)}
+.calTuan.nay{border-color:var(--vang)}
+.calTuan.chon{background:rgba(226,179,60,.18)}
+.calTuan small{display:block;color:var(--mo);font-size:10px}
+.calTuan .tg{font-size:11px;line-height:1.4}
+.calCt{margin-top:8px;padding:8px 10px;border-radius:10px;background:var(--the);font-size:12px}
+.calCt h3{font-size:12px;margin-bottom:4px;color:var(--vang);font-weight:600}
+.calCt p{margin:4px 0}
+.calCt small{color:var(--mo)}
+.calCt .nho{margin:6px 0 0}
+.hangCt{display:flex;align-items:flex-start;gap:6px}
+.hangCt .ndCt{flex:1}
+.calCt .xoaCt,.calCt .tickCt{padding:0 6px;font-size:13px;line-height:1.4}
+.calCt .xoaCt{opacity:.6}
+.calThem{margin-top:6px;padding:8px 10px;border-radius:10px;background:var(--the)}
+.calThemTd{font-size:11px;font-weight:600;color:var(--vang);margin-bottom:2px}
+/* Chế độ web (iPhone, iPad, trình duyệt): toàn màn hình, cột giữa tối đa 560px trên máy tính bảng, ẩn mục chỉ dành cho máy tính */
+html.web,html.web body{background:#13261e}
+html.web .khung{height:100vh;height:100dvh;max-width:560px;margin:0 auto;border-radius:0;border-top:0;border-bottom:0}
+html.web .dau{padding-top:calc(8px + env(safe-area-inset-top))}
+html.web .cuon{padding-bottom:calc(24px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+html.web input,html.web select,html.web textarea{font-size:16px}
+html.web button{min-height:30px}
+html.web [data-k=may],html.web [data-k=dk],html.web [data-k=xe],html.web [data-k=tatmay],html.web #nutThoat,
+html.web label:has(#doDacCai),html.web label:has(#cbTKD),html.web label:has(#cbXe){display:none}
+.chiWeb{display:none}
+html.web .chiWeb{display:grid}
+.lichHang .t b.loi0{color:var(--vang)}
+.lichHang small{display:block;color:var(--mo);font-size:11px;white-space:normal}
+.lichHang .t{white-space:normal}
+.lichHang.gvDang{opacity:.55}
+a.sdt{color:var(--vang);text-decoration:none;font-weight:600;white-space:nowrap;margin-right:4px}
+a.sdt:hover{text-decoration:underline}
+.gvSdtMoi{background:transparent;border:1px dashed var(--vien,#ffffff33);border-radius:6px;color:inherit;padding:3px 6px;font-size:12px}
+.leHieuUng{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+.dauNgay{position:relative}
+.leIcon{position:absolute;right:0;top:0;width:64px;height:64px;pointer-events:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+.leBanner{display:flex;align-items:center;gap:10px;margin:8px 0 2px;padding:7px 10px;border-radius:10px;background:var(--the)}
+.leTx b{display:block;font-weight:600;font-size:13px}
+.leTx small{color:var(--mo);font-size:11px}
+.leSvg{display:inline-block;flex:none}
+.leSvg svg{width:100%;height:100%;display:block}
+.emo{font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;display:inline-block}
+.leNho{display:inline-flex;width:22px;margin-right:6px;justify-content:center;vertical-align:middle}
+@media (prefers-reduced-motion:reduce){.leHieuUng{display:none}}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.chip2{padding:2px 9px;font-size:11px;border:1px solid var(--vach);border-radius:12px;color:var(--mo)}
+.chip2[aria-pressed=true]{background:rgba(226,179,60,.18);color:var(--vang);border-color:var(--vang)}
+.chip2 i{font-style:normal;opacity:.8}
+.nhomTd{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--vang);margin:10px 0 3px;padding-bottom:2px;border-bottom:1px solid var(--vach);letter-spacing:.03em}
+.nhomTd span:last-child{color:var(--mo);font-weight:400}
+.suaHang{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 8px;padding:7px;border-radius:8px;background:var(--the)}
+.suaHang input,.suaHang select{background:rgba(238,233,216,.08);border:1px solid var(--vach);border-radius:6px;padding:3px 6px;color:var(--chu);font:inherit;font-size:12px;flex:1 1 130px;min-width:0;width:auto}
+.suaHang select option{background:#1b3328;color:var(--chu)}
+.suaHang .nho{flex:none;margin-left:0}
+.gia .ten{display:block;line-height:1.25;overflow-wrap:anywhere}
+.gia .ten b{display:block;font-weight:500}
+.gia .ten small{display:block;font-size:11px;color:var(--mo)}
+.tt,h2 .ph{white-space:nowrap}
+.gh{font-size:10px;color:var(--mo);margin:0 0 2px;letter-spacing:.02em}
+.gh span+span{text-align:right}
+.pc{position:relative;display:block}
+.pc input.tien{padding-left:11px}
+.dl{font-size:9px;white-space:nowrap;position:absolute;left:0;top:50%;transform:translateY(-50%);cursor:help}
+.dl.len{color:var(--xanh)}
+.dl.xuong{color:var(--do)}
+input{font:inherit;color:var(--chu);background:transparent;border:0;border-bottom:1px solid transparent;padding:2px 0;width:100%}
+input:hover,input:focus{border-bottom-color:var(--vach);outline:none}
+input.tien{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+input::placeholder{color:rgba(238,233,216,.35)}
+
+.viec{display:flex;align-items:center;gap:8px;padding:3px 0}
+.viec input[type=checkbox]{width:auto;accent-color:var(--vang)}
+.viec .nd{flex:1}
+.monTienDo{margin:2px 0 8px}
+.monThanh{height:6px;border-radius:4px;background:rgba(255,255,255,.12);margin-top:4px;overflow:hidden}
+.monThanh i{display:block;height:100%;background:var(--vang)}
+.monHop{border:1px solid var(--vach);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.monHopTd{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(255,255,255,.06);font-size:12px}
+.monHopTd span{color:var(--mo)}
+.monHopDs{max-height:260px;overflow-y:auto;padding:2px 10px}
+.monBang th{text-align:left;color:var(--mo);font-weight:500;padding:3px 4px;border-bottom:1px solid var(--vach)}
+.monBang td{padding:4px;vertical-align:top;border-bottom:1px solid var(--vach)}
+.monBang td:first-child{width:46px;color:var(--vang);font-weight:600}
+.monBang small{color:var(--mo)}
+.monXong{color:#7fd48a}
+label.viec{cursor:pointer}
+label.viec .t{flex:1;white-space:normal}
+label.viec.monTat{opacity:.7}
+.viec.xong .nd{text-decoration:line-through;color:var(--mo)}
+.viec.tre .gioN{color:var(--do)}
+.gioN{color:var(--mo);font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cham{display:inline-block;width:8px;height:8px;border-radius:50%;background:rgba(238,233,216,.25);margin-right:7px}
+.cham.bat{background:var(--xanh)}
+.dk .p button{padding:2px 8px;border:1px solid var(--vach)}
+.dk .p button+button{margin-left:4px}
+.luoiTool{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px;padding-top:8px;border-top:1px solid var(--vach)}
+.luoiTool button{font-size:12px;padding:3px 9px;border:1px solid var(--vach);color:var(--chu)}
+.them{display:flex;gap:4px;margin-top:8px;align-items:center}
+.them input[type=time]{width:96px;color-scheme:dark;flex:none}
+.them input[type=text]{flex:1;min-width:0}
+.them button{flex:none;padding:3px 6px}
+.cuoi{display:flex;justify-content:flex-end;margin-top:4px}
+.cuoi button{font-size:11px}
+
+#cai label{display:grid;grid-template-columns:78px 1fr;align-items:center;gap:8px;margin:6px 0;color:var(--mo);font-size:12px}
+#cai select,#cai input[type=text],#cai input[type=url]{background:rgba(238,233,216,.08);border:1px solid var(--vach);border-radius:6px;padding:4px 6px;color:var(--chu);font:inherit;width:100%}
+#cai select option{background:#1b3328;color:var(--chu)}
+#cai input[type=range]{accent-color:var(--vang);padding:0}
+#cai input[type=checkbox]{width:auto;accent-color:var(--vang);justify-self:start}
+#cai .ghichu{font-size:11px;color:var(--mo);margin-top:6px}
+
+.don .p.tre{color:var(--do)}
+.don .p.nay{color:var(--vang)}
+.nho{padding:1px 7px;font-size:11px;border:1px solid var(--vach);margin-left:4px}
+.them input[type=number]{width:70px;flex:none;background:rgba(238,233,216,.08);border:1px solid var(--vach);border-radius:6px;padding:4px 6px;color:var(--chu);text-align:right}
+.them select{flex:none;background:rgba(238,233,216,.08);border:1px solid var(--vach);border-radius:6px;padding:3px 4px;color:var(--chu);font:inherit;font-size:12px;width:auto}
+.them select option{background:#1b3328;color:var(--chu)}
+.them input[type=date]{width:124px;flex:none;color-scheme:dark}
+.them input.tien2{width:92px;flex:none;text-align:right}
+.bd{display:grid;grid-template-columns:58px 1fr 92px;gap:8px;align-items:center;margin:5px 0;font-size:12px}
+.bd b{font-weight:400;color:var(--mo);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bd .trong{font-size:11px;text-align:right}
+.bdTab{display:flex;gap:4px;margin-bottom:6px;flex-wrap:wrap}
+.bdTab button{font-size:11px;padding:2px 9px;border:1px solid var(--vach);border-radius:12px}
+#bdChon{width:100%;background:rgba(238,233,216,.08);border:1px solid var(--vach);border-radius:6px;padding:4px 6px;color:var(--chu);font:inherit;margin:4px 0}
+#bdChon option{background:#1b3328;color:var(--chu)}
+.bdBang{max-height:240px;overflow:auto;scrollbar-width:thin}
+.bdBang table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+.bdBang th{text-align:right;font-weight:500;color:var(--mo);font-size:11px;padding:2px 4px;position:sticky;top:0;background:#1e3a2e}
+.bdBang th:first-child,.bdBang td:first-child{text-align:left}
+.bdBang td{text-align:right;padding:2px 4px;border-top:1px solid rgba(226,179,60,.08)}
+.bdBang tr.doi td{color:var(--vang)}
+#bieuDo{margin-top:8px;padding-top:6px;border-top:1px dashed var(--vach)}
+.tinh{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.tinh select,.tinh input,.tim{background:rgba(238,233,216,.08);border:1px solid var(--vach);border-radius:6px;padding:4px 6px;color:var(--chu);font:inherit;width:100%}
+.tinh select option{background:#1b3328;color:var(--chu)}
+.kq{margin-top:8px;padding:8px 10px;border-radius:8px;background:var(--the);display:flex;justify-content:space-between;align-items:baseline}
+.kq b{font-size:20px;font-weight:300;color:var(--vang)}
+.tim{margin-bottom:4px}
+.bs{font-weight:600;letter-spacing:.03em}
+#cai input[type=time]{background:rgba(238,233,216,.08);border:1px solid var(--vach);border-radius:6px;padding:4px 6px;color:var(--chu);font:inherit;width:100%;color-scheme:dark}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="khung">
+  <canvas class="leHieuUng" id="leHieuUng" aria-hidden="true"></canvas>
+  <div class="dau">
+    <div class="keo" id="loiChao" title="Giữ chuột ở đây để kéo widget">⠿</div>
+    <button id="nutLam" title="Làm mới widget (nạp lại giao diện mới nhất, phím F5)" aria-label="Làm mới widget">⟳</button>
+    <button id="nutCai" title="Cài đặt" aria-label="Cài đặt" aria-pressed="false">⚙</button>
+    <button id="nutThoat" title="Ẩn widget (gọi lại: Ctrl+Alt+W hoặc bấm biểu tượng ở khay hệ thống)" aria-label="Ẩn widget">✕</button>
+  </div>
+  <div class="cuon">
+    <div class="dauNgay">
+      <div class="leIcon" id="leIcon" hidden></div>
+      <div class="gio" id="gio">--:--</div>
+      <div class="ngay" id="ngay"></div>
+      <div class="amlich" id="amLich"></div>
+    </div>
+    <div class="leBanner" id="leBanner" hidden></div>
+    <div class="leBanner" id="lichBanner" hidden></div>
+
+    <section id="cai" hidden>
+      <h2><span>Cài đặt</span></h2>
+      <label>Nơi ở <select id="chonNoi"></select></label>
+      <label>Firebase <input id="fbUrl" type="url" placeholder="https://…firebasedatabase.app" spellcheck="false"></label>
+      <label>Nhánh đơn <input id="fbNhanh" type="text" placeholder="orders" spellcheck="false"></label>
+      <label>Độ đặc <input id="doDacCai" type="range" min="0.55" max="1" step="0.01"></label>
+      <label>Tự mở <input id="cbTKD" type="checkbox"></label>
+      <label class="chiWeb">Thông báo máy <button id="btnTB" class="nho bat" style="justify-self:start">Bật thông báo</button></label>
+      <label>Thông báo <input id="cbTB" type="checkbox"></label>
+      <label>Tóm tắt lúc <input id="gioBrief" type="time"></label>
+      <label>Camera xe <input id="cbXe" type="checkbox"></label>
+      <label>Hiệu ứng lễ <input id="cbLe" type="checkbox"></label>
+      <label>Đồng bộ giá <input id="cbDongBo" type="checkbox"></label>
+      <label>Mã nhóm <input id="maDongBo" type="text" spellcheck="false" placeholder="giống nhau ở các máy"></label>
+      <p class="ghichu" id="dongBoTt">Đồng bộ giá: chưa chạy.</p>
+      <p class="ghichu">Địa chỉ Firebase lấy trong Firebase Console, mục Realtime Database. Phím tắt Ctrl+Alt+W để hiện hoặc ẩn widget. Camera xe đọc từ server biển số ở cổng 5690 trên máy này.</p>
+    </section>
+
+    <section data-k="troi" data-tab="lich">
+      <h2><button class="tt" aria-expanded="true">Thời tiết</button><span class="ph" id="tenNoi"></span></h2>
+      <div class="ruot"><div id="troi" class="trong">Đang tải…</div></div>
+    </section>
+
+    <nav class="tabs" role="tablist" aria-label="Nhóm mục">
+      <button role="tab" data-tab="lich">📅 Lịch<i class="soTab" id="soLich"></i></button>
+      <button role="tab" data-tab="ban">🛒 Bán hàng<i class="soTab" id="soBan"></i></button>
+      <button role="tab" data-tab="viec">✅ Việc<i class="soTab" id="soViec"></i></button>
+      <button role="tab" data-tab="may">💻 Máy</button>
+      <button role="tab" data-tab="tien">🧮 Tiện ích</button>
+    </nav>
+
+    <section data-k="cal" data-tab="lich">
+      <h2><button class="tt" aria-expanded="true">Lịch tuần, tháng</button><span class="ph" id="calTom"></span></h2>
+      <div class="ruot">
+        <div class="calTab"><button data-cal="ngay" aria-pressed="false">Ngày</button><button data-cal="thang" aria-pressed="true">Tháng</button><button data-cal="tuan" aria-pressed="false">Tuần</button><span class="calDieu"><button data-cal="truoc" aria-label="Trước">‹</button><button data-cal="nay">Hôm nay</button><button data-cal="sau" aria-label="Sau">›</button></span></div>
+        <div id="calTd" class="calTd"></div>
+        <div id="calLuoi"></div>
+        <div id="calCt" class="calCt"></div>
+        <div id="calThem" class="calThem">
+          <div class="calThemTd" id="calThemTd"></div>
+          <div class="them"><input id="calTen" type="text" placeholder="Việc hoặc lịch cần thêm" aria-label="Nội dung thêm vào ngày đã chọn"></div>
+          <div class="them"><select id="calBuoi" aria-label="Buổi"><option value="">Buổi</option><option value="sang">Sáng</option><option value="chieu">Chiều</option><option value="toi">Tối</option></select><input id="calGio" type="time" aria-label="Giờ (không bắt buộc)"><button class="nho bat" data-cal="addViec">+ Việc</button><button class="nho" data-cal="addLich">+ Lịch</button></div>
+          <p class="trong" id="calTb"></p>
+        </div>
+      </div>
+    </section>
+
+    <section data-k="le" data-tab="lich">
+      <h2><button class="tt" aria-expanded="true">Lễ sắp tới</button><span class="ph" id="leTom"></span></h2>
+      <div class="ruot"><div id="leDs"></div></div>
+    </section>
+
+    <section data-k="don" data-tab="ban">
+      <h2><button class="tt" aria-expanded="true">Đơn đặt hàng</button><span class="ph"><span id="donCapNhat"></span><button id="nutDon" title="Tải lại đơn" aria-label="Tải lại đơn">⟳</button></span></h2>
+      <div class="ruot"><div id="don" class="trong">Đang tải…</div></div>
+    </section>
+
+    <section data-k="gia" data-tab="ban">
+      <h2><button class="tt" aria-expanded="true">Giá hôm nay</button><span class="ph"><span id="nhacGia"></span><button id="bieuGia" title="Biểu đồ giá 30 ngày" aria-pressed="false">Biểu đồ</button><button id="chepGia" title="Chép bảng giá để gửi khách (Zalo, tin nhắn)">Chép</button><button id="suaGia" title="Sửa tên và nhóm các mặt hàng" aria-label="Sửa mặt hàng" aria-pressed="false">✎</button><button id="themGia" title="Thêm dòng giá">+</button></span></h2>
+      <div class="ruot"><div id="chipNhom" class="chips"></div><input id="timGia" class="tim" type="text" placeholder="Tìm mã hoặc tên hàng (vd 512L, D12ST, gà lớn)" aria-label="Tìm mặt hàng" spellcheck="false"><div id="gia"></div><div id="bieuDo" hidden></div></div>
+    </section>
+
+    <section data-k="luagao" data-tab="ban">
+      <h2><button class="tt" aria-expanded="true">🌾 App Lúa Gạo</button><span class="ph"><span id="ngStatus" style="font-size:.75rem;opacity:.6"></span><button id="ngSync" title="Đồng bộ dữ liệu từ App Lúa Gạo">🔄 Sync</button></span></h2>
+      <div class="ruot">
+        <input id="ngTimSP" class="tim" type="text" placeholder="Tìm sản phẩm (mã, tên, % đạm)…" aria-label="Tìm sản phẩm" spellcheck="false" oninput="ngLocSP()">
+        <div id="ngGia" style="margin-top:.4rem"></div>
+        <hr style="border-color:var(--mo);margin:.8rem 0">
+        <h3 style="margin:0 0 .4rem;font-size:.8rem;opacity:.7">KHÁCH HÀNG</h3>
+        <input id="ngTimKH" class="tim" type="text" placeholder="Tìm khách hàng…" aria-label="Tìm khách hàng" spellcheck="false" oninput="ngLocKH()">
+        <div id="ngKhach" style="margin-top:.4rem"></div>
+        <hr style="border-color:var(--mo);margin:.8rem 0">
+        <h3 style="margin:0 0 .4rem;font-size:.8rem;opacity:.7">LỊCH TRONG APP</h3>
+        <div id="ngLich" style="margin-top:.4rem"></div>
+      </div>
+    </section>
+
+    <section data-k="viec" data-tab="viec">
+      <h2><button class="tt" aria-expanded="true">Nhắc việc</button><span class="ph" id="demViec"></span></h2>
+      <div class="ruot">
+        <div class="calTab" id="vTab"><button data-vr="ngay" aria-pressed="true">Hôm nay</button><button data-vr="tuan" aria-pressed="false">Tuần</button><button data-vr="thang" aria-pressed="false">Tháng</button><span class="calDieu" id="vDieu" hidden><button data-vr="truoc" aria-label="Trước">‹</button><button data-vr="nay">Nay</button><button data-vr="sau" aria-label="Sau">›</button></span></div>
+        <div id="vTd" class="calTd" hidden></div>
+        <div id="viec"></div>
+        <div class="them">
+          <input id="viecMoi" type="text" placeholder="Thêm việc…" aria-label="Nội dung việc">
+          <input id="gioMoi" type="time" title="Giờ nhắc (không bắt buộc)" aria-label="Giờ nhắc">
+          <button id="lapMoi" title="Lặp lại mỗi ngày" aria-label="Lặp mỗi ngày" aria-pressed="false">↻</button>
+          <button id="addViec" class="bat" title="Thêm việc (Enter)" aria-label="Thêm việc">+</button>
+        </div>
+        <div class="them"><span class="trong">Ngày</span><input id="ngayMoi" type="date" aria-label="Ngày làm (để trống là việc hôm nay, hiện đến khi xong)"><select id="buoiMoi" aria-label="Buổi"><option value="">Buổi</option><option value="sang">Sáng</option><option value="chieu">Chiều</option><option value="toi">Tối</option></select></div>
+        <p class="trong" id="viecTb"></p>
+        <div class="cuoi"><button id="xoaXong" hidden>Xóa việc đã xong</button></div>
+      </div>
+    </section>
+
+    <section data-k="lich" data-tab="lich">
+      <h2><button class="tt" aria-expanded="true">Lịch học, lịch hẹn</button><span class="ph" id="lichTom"></span></h2>
+      <div class="ruot">
+        <div id="lichDs"></div>
+        <div class="them"><input id="lichNgay" type="date" aria-label="Ngày"><input id="lichGio" type="time" aria-label="Giờ (không bắt buộc)"><select id="lichBuoi" aria-label="Buổi (nếu chưa rõ giờ)"><option value="">Buổi</option><option value="sang">Sáng</option><option value="chieu">Chiều</option><option value="toi">Tối</option></select></div>
+        <div class="them"><input id="lichTen" type="text" placeholder="Môn học hoặc việc cần đi" aria-label="Nội dung lịch"><button id="lichThem" class="bat" aria-label="Thêm lịch">+</button></div>
+        <p class="trong" id="lichTb"></p>
+      </div>
+    </section>
+
+    <section data-k="gv" data-tab="lich">
+      <h2><button class="tt" aria-expanded="true">Giáo viên · SĐT</button><span class="ph" id="gvTom"></span></h2>
+      <div class="ruot">
+        <div id="gvDs"></div>
+        <div class="them"><input id="gvMon" type="text" placeholder="Môn / vai trò" aria-label="Môn hoặc vai trò"><input id="gvTen" type="text" placeholder="Giáo viên" aria-label="Tên giáo viên"></div>
+        <div class="them"><input id="gvSdt" type="tel" inputmode="tel" placeholder="Số điện thoại" aria-label="Số điện thoại"><button id="gvThem" class="bat" aria-label="Thêm giáo viên">+</button></div>
+        <p class="trong" id="gvTb"></p>
+      </div>
+    </section>
+
+    <section data-k="no" data-tab="ban">
+      <h2><button class="tt" aria-expanded="true">Công nợ</button><span class="ph" id="tongNo"></span></h2>
+      <div class="ruot">
+        <div id="no"></div>
+        <div class="them">
+          <input id="noTen" type="text" placeholder="Tên khách" aria-label="Tên khách nợ">
+          <input id="noTien" class="tien2" type="text" inputmode="numeric" placeholder="Số tiền" aria-label="Số tiền nợ">
+        </div>
+        <div class="them">
+          <span class="trong">Hẹn trả</span><input id="noHan" type="date" aria-label="Ngày hẹn trả">
+          <button id="addNo" class="bat" title="Thêm khoản nợ" aria-label="Thêm khoản nợ">+ Thêm</button>
+        </div>
+      </div>
+    </section>
+
+    <section data-k="xe" data-tab="may">
+      <h2><button class="tt" aria-expanded="true">Xe hôm nay</button><span class="ph" id="demXe"></span></h2>
+      <div class="ruot"><div id="xe" class="trong">Đang tải…</div></div>
+    </section>
+
+    <section data-k="ghichu" data-tab="viec">
+      <h2><button class="tt" aria-expanded="true">Ghi chú nhanh</button><span class="ph" id="demGc"></span></h2>
+      <div class="ruot">
+        <div id="ghichu"></div>
+        <div class="them"><input id="gcMoi" type="text" placeholder="Gõ ghi chú, Enter để lưu" aria-label="Ghi chú"><button id="addGc" class="bat" aria-label="Thêm ghi chú">+</button></div>
+      </div>
+    </section>
+
+    <section data-k="khach" data-tab="ban">
+      <h2><button class="tt" aria-expanded="true">Khách quen</button><span class="ph" id="demKq"></span></h2>
+      <div class="ruot">
+        <input id="kqTim" class="tim" type="text" placeholder="Tìm tên hoặc số điện thoại" aria-label="Tìm khách">
+        <div id="kq"></div>
+        <div class="them">
+          <input id="kqTen" type="text" placeholder="Tên" aria-label="Tên khách">
+          <input id="kqSdt" class="tien2" type="text" inputmode="tel" placeholder="SĐT" aria-label="Số điện thoại">
+          <button id="addKq" class="bat" aria-label="Thêm khách">+</button>
+        </div>
+      </div>
+    </section>
+
+    <section data-k="tinh" data-tab="tien">
+      <h2><button class="tt" aria-expanded="true">Tính nhanh</button></h2>
+      <div class="ruot">
+        <div class="tinh">
+          <select id="tinhHang" aria-label="Chọn mặt hàng"></select>
+          <input id="tinhGia" type="text" inputmode="numeric" placeholder="Giá đ/kg" aria-label="Giá mỗi kg">
+          <input id="tinhSL" type="text" inputmode="decimal" placeholder="Số lượng" aria-label="Số lượng">
+          <select id="tinhDV" aria-label="Đơn vị"><option value="1">kg</option><option value="25" data-bao="1">bao 25kg</option><option value="40" data-bao="1">bao 40kg</option><option value="50" data-bao="1" selected>bao 50kg</option><option value="1000">tấn</option></select>
+        </div>
+        <div class="kq"><span id="tinhKg" class="trong"></span><b id="tinhTien">0đ</b></div>
+      </div>
+    </section>
+
+    <section data-k="ctdt" data-tab="tien">
+      <h2><button class="tt" aria-expanded="true">Môn học Thú y (tick môn đã học)</button><span class="ph" id="monTom"></span></h2>
+      <div class="ruot">
+        <div id="monBang"></div>
+                <div id="monDs"></div>
+        <p class="trong">Chương trình đào tạo Cao đẳng Thú y khóa 2024–2027 (QĐ 418/QĐ-CĐKTKT, 27/5/2024). Tick ô vuông của môn bạn đã học hoặc đang học thì môn đó nhảy sang hộp "Đã học"; bỏ tick thì quay về "Chưa học".</p>
+      </div>
+    </section>
+
+    <section data-k="dk" data-tab="may">
+      <h2><button class="tt" aria-expanded="true">Điều khiển</button><span class="ph" id="dkTb"></span></h2>
+      <div class="ruot"><div id="dk" class="trong">Đang tải…</div></div>
+    </section>
+
+    <section data-k="tatmay" data-tab="may">
+      <h2><button class="tt" aria-expanded="true">Hẹn giờ máy tính</button><span class="ph" id="tatTb"></span></h2>
+      <div class="ruot">
+        <div class="them"><button class="nho bat" data-che="tat" aria-pressed="true">Tắt máy</button><button class="nho" data-che="ngu" aria-pressed="false">Ngủ đông + tự bật</button></div>
+        <div id="tatHen" hidden>
+          <div class="kq"><span class="trong" id="tatLuc"></span><b id="tatDem">00:00:00</b></div>
+          <div class="them"><button id="tatThem" class="nho" title="Hoãn tắt thêm 15 phút">+15 phút</button><button id="tatHuy" class="nho bat">Hủy hẹn giờ</button></div>
+        </div>
+        <div id="tatChon">
+          <div class="them"><button class="nho" data-tat="30">30 phút</button><button class="nho" data-tat="60">1 giờ</button><button class="nho" data-tat="120">2 giờ</button><button class="nho" data-tat="180">3 giờ</button></div>
+          <div class="them"><span class="trong">Tắt lúc</span><input id="tatGio" type="time" aria-label="Giờ tắt máy"><button id="tatHenGio" class="nho bat">Hẹn</button></div>
+          <p class="trong">Đến giờ máy tắt hẳn, chương trình đang mở bị đóng. Widget sẽ báo trước 5 phút và 1 phút.</p>
+        </div>
+        <div id="nguChon" hidden>
+          <div class="them"><span class="trong" style="width:92px;flex:none">Ngủ đông lúc</span><input id="nguGio" type="time" value="22:00" aria-label="Giờ ngủ đông"><span class="trong">xóa trống = không ngủ</span></div>
+          <div class="them"><span class="trong" style="width:92px;flex:none">Tự bật lại lúc</span><input id="batGio" type="time" value="06:30" aria-label="Giờ tự bật lại"></div>
+          <div class="them"><span class="trong" style="width:92px;flex:none">Giữ thức</span><input id="giuPhut" type="number" min="0" max="720" step="15" value="180" aria-label="Số phút giữ máy thức sau khi bật"><span class="trong">phút sau khi bật (0 = không giữ)</span></div>
+          <label class="them trong"><input id="nguMoi" type="checkbox" style="width:auto;flex:none;accent-color:var(--vang)"> Lặp lại mỗi ngày</label>
+          <div class="them"><button id="nguHen" class="nho bat">Hẹn lịch</button><button id="nguNgay" class="nho" title="Ngủ đông ngay bây giờ, tự bật lại vào giờ ở trên">Ngủ đông ngay</button></div>
+          <div id="nguTt" class="trong"></div>
+        </div>
+      </div>
+    </section>
+
+    <section data-k="may" data-tab="may">
+      <h2><button class="tt" aria-expanded="true">Máy tính</button><span class="ph" id="batMay"></span></h2>
+      <div class="ruot"><div id="may"></div></div>
+    </section>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const doc = (k, md) => { try { return JSON.parse(localStorage.getItem(k)) ?? md } catch { return md } };
+const ghi = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)) } catch {} };
+// Lưu ý: trong trang có phần tử id="may" nên window.may luôn tồn tại (là phần tử HTML) khi chạy trên trình duyệt/iPhone; phải kiểm tra đúng hàm của cầu nối
+const coMay = !!(window.may && typeof window.may.sys === 'function');
+if (!coMay) document.documentElement.classList.add('web');   // chạy trong trình duyệt / iPhone / iPad: giao diện toàn màn hình, ẩn mục chỉ dành cho máy tính
+const thu = ['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'];
+const thuNgan = ['CN','T2','T3','T4','T5','T6','T7'];
+const hai = n => String(n).padStart(2, '0');
+const so = n => (+n).toLocaleString('vi-VN');
+const khoaNgay = (d = new Date()) => `${d.getFullYear()}-${hai(d.getMonth() + 1)}-${hai(d.getDate())}`;
+const gioPhut = d => hai(d.getHours()) + ':' + hai(d.getMinutes());
+
+/* ===== Cài đặt (chỉnh ngay trong widget, nút ⚙) ===== */
+const NOI = [
+  { ten: 'Bạc Liêu', lat: 9.29, lon: 105.72 }, { ten: 'Cà Mau', lat: 9.18, lon: 105.15 },
+  { ten: 'Sóc Trăng', lat: 9.60, lon: 105.97 }, { ten: 'Hậu Giang', lat: 9.78, lon: 105.47 },
+  { ten: 'Cần Thơ', lat: 10.03, lon: 105.78 }, { ten: 'Kiên Giang', lat: 10.01, lon: 105.08 },
+  { ten: 'Trà Vinh', lat: 9.93, lon: 106.34 }, { ten: 'Vĩnh Long', lat: 10.25, lon: 105.97 },
+  { ten: 'Bến Tre', lat: 10.24, lon: 106.38 }, { ten: 'Tiền Giang', lat: 10.36, lon: 106.36 },
+  { ten: 'Long An', lat: 10.54, lon: 106.41 }, { ten: 'TP. Hồ Chí Minh', lat: 10.78, lon: 106.70 }
+];
+// Đồng bộ giá giữa các máy: mã nhóm mặc định giống nhau trong mọi bản sao của widget nên máy mới cài là tự khớp; đổi mã ở ⚙ nếu muốn tách nhóm riêng
+const cfg = { noi: 'Bạc Liêu', fb: '', nhanh: 'orders', tb: true, gioBrief: '07:00', xe: true,
+  dongBoGia: true, hieuUngLe: true, urlDongBo: 'https://ban-hang-thong-bao-default-rtdb.firebaseio.com', maDongBo: 'gia-a92d377f4162', ...doc('w_cfg', {}) };
+const luuCfg = () => ghi('w_cfg', cfg);
+const viTriNoi = () => NOI.find(n => n.ten === cfg.noi) || NOI[0];
+
+/* Thông báo tự động: mỗi loại chỉ báo một lần mỗi ngày (nhớ trong w_tb) */
+const tb = doc('w_tb', {});
+const datTB = (k, v) => { tb[k] = v; ghi('w_tb', tb); };
+/* Thông báo an toàn: trên trình duyệt/iPhone chưa cấp quyền (hoặc không có Notification) thì bỏ qua, không gây lỗi */
+const thongBao = (t, o) => { try { if (typeof Notification !== 'undefined' && (coMay || Notification.permission === 'granted')) new Notification(t, o); } catch {} };
+const bao = (tieuDe, noiDung) => { if (cfg.tb !== false) { try { thongBao(tieuDe, { body: noiDung }); } catch {} } };
+let troiXong = false, donXong = false, troiTin = null, donCache = null;
+
+/* Âm lịch Việt Nam (thuật toán Hồ Ngọc Đức, múi giờ +7) */
+const AL = (() => {
+  const INT = Math.floor, PI = Math.PI, TZ = 7;
+  const jd = (d, m, y) => { const a = INT((14 - m) / 12), yy = y + 4800 - a, mm = m + 12 * a - 3;
+    let j = d + INT((153 * mm + 2) / 5) + 365 * yy + INT(yy / 4) - INT(yy / 100) + INT(yy / 400) - 32045;
+    if (j < 2299161) j = d + INT((153 * mm + 2) / 5) + 365 * yy + INT(yy / 4) - 32083; return j; };
+  const soc = k => { const T = k / 1236.85, T2 = T * T, T3 = T2 * T, dr = PI / 180;
+    let Jd1 = 2415020.75933 + 29.53058868 * k + 0.0001178 * T2 - 0.000000155 * T3 + 0.00033 * Math.sin((166.56 + 132.87 * T - 0.009173 * T2) * dr);
+    const M = 359.2242 + 29.10535608 * k - 0.0000333 * T2 - 0.00000347 * T3, Mpr = 306.0253 + 385.81691806 * k + 0.0107306 * T2 + 0.00001236 * T3,
+      F = 21.2964 + 390.67050646 * k - 0.0016528 * T2 - 0.00000239 * T3;
+    let C1 = (0.1734 - 0.000393 * T) * Math.sin(M * dr) + 0.0021 * Math.sin(2 * dr * M) - 0.4068 * Math.sin(Mpr * dr) + 0.0161 * Math.sin(dr * 2 * Mpr)
+      - 0.0004 * Math.sin(dr * 3 * Mpr) + 0.0104 * Math.sin(dr * 2 * F) - 0.0051 * Math.sin(dr * (M + Mpr)) - 0.0074 * Math.sin(dr * (M - Mpr))
+      + 0.0004 * Math.sin(dr * (2 * F + M)) - 0.0004 * Math.sin(dr * (2 * F - M)) - 0.0006 * Math.sin(dr * (2 * F + Mpr))
+      + 0.0010 * Math.sin(dr * (2 * F - Mpr)) + 0.0005 * Math.sin(dr * (2 * Mpr + M));
+    const dt = T < -11 ? 0.001 + 0.000839 * T + 0.0002261 * T2 - 0.00000845 * T3 - 0.000000081 * T * T3 : -0.000278 + 0.000265 * T + 0.000262 * T2;
+    return INT(Jd1 + C1 - dt + 0.5 + TZ / 24); };
+  const kinh = j => { const T = (j - 2451545.5 - TZ / 24) / 36525, T2 = T * T, dr = PI / 180;
+    const M = 357.52910 + 35999.05030 * T - 0.0001559 * T2 - 0.00000048 * T * T2, L0 = 280.46645 + 36000.76983 * T + 0.0003032 * T2;
+    let DL = (1.914600 - 0.004817 * T - 0.000014 * T2) * Math.sin(dr * M) + (0.019993 - 0.000101 * T) * Math.sin(dr * 2 * M) + 0.000290 * Math.sin(dr * 3 * M);
+    let L = (L0 + DL) * dr; L -= PI * 2 * INT(L / (PI * 2)); return INT(L / PI * 6); };
+  const thang11 = y => { const off = jd(31, 12, y) - 2415021, k = INT(off / 29.530588853); let nm = soc(k); if (kinh(nm) >= 9) nm = soc(k - 1); return nm; };
+  const nhuan = a11 => { const k = INT((a11 - 2415021.076998695) / 29.530588853 + 0.5); let last, i = 1, arc = kinh(soc(k + i));
+    do { last = arc; i++; arc = kinh(soc(k + i)); } while (arc != last && i < 14); return i - 1; };
+  const CAN = ['Giáp','Ất','Bính','Đinh','Mậu','Kỷ','Canh','Tân','Nhâm','Quý'], CHI = ['Tý','Sửu','Dần','Mão','Thìn','Tỵ','Ngọ','Mùi','Thân','Dậu','Tuất','Hợi'];
+  return (d, m, y) => {
+    const n = jd(d, m, y), k = INT((n - 2415021.076998695) / 29.530588853);
+    let ms = soc(k + 1); if (ms > n) ms = soc(k);
+    let a11 = thang11(y), b11 = a11, ly;
+    if (a11 >= ms) { ly = y; a11 = thang11(y - 1); } else { ly = y + 1; b11 = thang11(y + 1); }
+    const ld = n - ms + 1, diff = INT((ms - a11) / 29); let lm = diff + 11, leap = false;
+    if (b11 - a11 > 365) { const lmd = nhuan(a11); if (diff >= lmd) { lm = diff + 10; if (diff == lmd) leap = true; } }
+    if (lm > 12) lm -= 12; if (lm >= 11 && diff < 4) ly -= 1;
+    return { ngay: ld, thang: lm, nam: ly, nhuan: leap,
+      canChiNam: CAN[(ly + 6) % 10] + ' ' + CHI[(ly + 8) % 12],
+      canChiThang: CAN[(((ly + 6) % 10) * 2 + lm + 1) % 10] + ' ' + CHI[(lm + 1) % 12],   // tháng Giêng = Dần; can tính theo can của năm
+      canChiNgay: CAN[(n + 9) % 10] + ' ' + CHI[(n + 1) % 12] };
+  };
+})();
+
+/* Đồng hồ + lời chào + âm lịch */
+let ngayAL = '';
+function dongHo() {
+  const d = new Date();
+  $('#gio').innerHTML = `${hai(d.getHours())}:${hai(d.getMinutes())}<small>${hai(d.getSeconds())}</small>`;
+  if (d.toDateString() !== ngayAL) veAmLich(d);
+}
+function veAmLich(d) {
+  ngayAL = d.toDateString();
+  $('#ngay').textContent = `${thu[d.getDay()]}, ${hai(d.getDate())}/${hai(d.getMonth() + 1)}/${d.getFullYear()}`;
+  const a = AL(d.getDate(), d.getMonth() + 1, d.getFullYear());
+  let ghiChu = '';
+  if (a.ngay === 1) ghiChu = '<b>Mùng một</b>';
+  else if (a.ngay === 15) ghiChu = '<b>Rằm</b>';
+  else {
+    for (let i = 1; i <= 30; i++) {
+      const t = new Date(d); t.setDate(d.getDate() + i);
+      const n = AL(t.getDate(), t.getMonth() + 1, t.getFullYear()).ngay;
+      if (n === 1 || n === 15) { ghiChu = `còn ${i} ngày tới ${n === 1 ? 'mùng một' : 'rằm'}`; break; }
+    }
+  }
+  $('#amLich').innerHTML = `Âm lịch ${a.ngay}/${a.thang}${a.nhuan ? ' nhuận' : ''} · tháng ${a.canChiThang} năm ${a.canChiNam}, ngày ${a.canChiNgay}${ghiChu ? '<br>' + ghiChu : ''}`;
+}
+function loiChao() {
+  const h = new Date().getHours();
+  $('#loiChao').textContent = '⠿  ' + (h < 11 ? 'Chào buổi sáng' : h < 14 ? 'Chào buổi trưa' : h < 18 ? 'Chào buổi chiều' : 'Chào buổi tối');
+}
+setInterval(dongHo, 1000); dongHo();
+setInterval(loiChao, 60000); loiChao();
+
+/* Máy tính */
+let pin = null;
+navigator.getBattery?.().then(b => { pin = b; });
+const thanh = (ten, pt, chu, caoKhi = 85, canh = pt >= caoKhi) =>
+  `<div class="chiso"><b>${ten}</b><div class="thanh"><div class="${canh ? 'cao' : ''}" style="width:${Math.min(100, pt)}%"></div></div><i>${chu}</i></div>`;
+async function capNhatMay() {
+  let html = '';
+  // Máy bàn luôn báo "100% đang sạc" nên chỉ hiện pin khi thật sự có ý nghĩa
+  if (pin && !(pin.charging && pin.level >= 0.995)) {
+    const p = Math.round(pin.level * 100);
+    html += thanh('Pin', p, `${p}%${pin.charging ? ' ⚡' : ''}`, 0, p <= 20 && !pin.charging);
+    if (p <= 15 && !pin.charging && tb.pin !== khoaNgay()) { datTB('pin', khoaNgay()); bao('Pin yếu', `Máy còn ${p}%, cắm sạc nhé.`); }
+  }
+  if (coMay) {
+    try {
+      const s = await window.may.sys();
+      const gb = n => (n / 1073741824).toFixed(1);
+      html += thanh('CPU', s.cpu, s.cpu + '%');
+      html += thanh('RAM', 100 * s.ramDung / s.ramTong, `${gb(s.ramDung)}/${gb(s.ramTong)}G`, 90);
+      for (const d of s.dia || []) html += thanh('Ổ ' + d.ten, 100 * d.dung / d.tong, `còn ${Math.round(d.tong - d.dung > 0 ? (d.tong - d.dung) / 1073741824 : 0)}G`, 90);
+      const day = (s.dia || []).filter(d => d.tong - d.dung < 10 * 1073741824);
+      if (day.length && tb.dia !== khoaNgay()) { datTB('dia', khoaNgay()); bao('Ổ đĩa sắp đầy', day.map(d => `Ổ ${d.ten} còn ${gb(d.tong - d.dung)}GB`).join(', ')); }
+      const h = Math.floor(s.batMay / 3600);
+      $('#batMay').textContent = `bật ${h >= 24 ? Math.floor(h / 24) + ' ngày ' : ''}${h % 24} giờ`;
+    } catch {}
+  }
+  $('#may').innerHTML = html || '<p class="trong">Chạy bằng chay.bat để xem thông số máy.</p>';
+}
+setInterval(capNhatMay, 2000); capNhatMay();
+
+/* Thời tiết — Open-Meteo, không cần khóa; có dự báo mưa 12 giờ tới để tính chuyện phơi lúa */
+const moTa = c => c === 0 ? 'Trời quang' : c <= 2 ? 'Ít mây' : c === 3 ? 'Nhiều mây'
+  : c <= 48 ? 'Sương mù' : c <= 57 ? 'Mưa phùn' : c <= 67 ? 'Mưa' : c <= 82 ? 'Mưa rào' : c >= 95 ? 'Dông' : 'Có mưa';
+function veTroi(d, cuLuc) {
+  const c = d.current, n = d.daily, h = d.hourly;
+  let i0 = h.time.indexOf(c.time.slice(0, 13) + ':00'); if (i0 < 0) i0 = 0;
+  const gio = h.time.slice(i0, i0 + 12), xs = h.precipitation_probability.slice(i0, i0 + 12).map(v => v ?? 0);
+  const dau = xs.findIndex(p => p >= 50), cao = Math.max(...xs);
+  let goiY, canh = false;
+  if (dau >= 0) { goiY = `Dự báo mưa khoảng ${gio[dau].slice(11, 13)}h (${xs[dau]}%). Lưu ý che hàng, thu lúa đang phơi.`; canh = true; }
+  else if (cao >= 30) goiY = `Có khả năng mưa nhẹ (tối đa ${cao}%), theo dõi thêm.`;
+  else goiY = 'Chưa thấy mưa trong 12 giờ tới, thuận lợi phơi lúa và xuất hàng.';
+  const gioMua = dau >= 0 ? gio[dau].slice(11, 13) : '';
+  troiTin = { dau, gioMua, homNay: n.precipitation_probability_max[0] ?? 0 };
+  $('#tenNoi').textContent = `${viTriNoi().ten} · ${Math.round(c.temperature_2m)}°${dau >= 0 ? ' · mưa ' + gioMua + 'h' : ''}`;
+  // Cảnh báo mưa sớm: mưa ≥50% trong 2 giờ tới thì báo và mở bảng thời tiết vài phút
+  if (!cuLuc && dau >= 0 && dau <= 2 && tb.mua !== gio[dau].slice(0, 13)) {
+    datTB('mua', gio[dau].slice(0, 13));
+    bao('Sắp mưa', `Khoảng ${gioMua}h (${xs[dau]}%). Che hàng, thu lúa đang phơi.`);
+    hienTroiTam();
+  }
+  const ngay3 = [1, 2, 3].filter(i => n.time[i]).map(i => {
+    const w = new Date(n.time[i] + 'T00:00');
+    return `<div><b>${thuNgan[w.getDay()]} ${w.getDate()}/${w.getMonth() + 1}</b>${Math.round(n.temperature_2m_min[i])}–${Math.round(n.temperature_2m_max[i])}°<br><span>mưa ${n.precipitation_probability_max[i] ?? 0}%</span></div>`;
+  }).join('');
+  $('#troi').className = '';
+  $('#troi').innerHTML = `<div class="troi"><div class="do">${Math.round(c.temperature_2m)}°</div>
+    <div>${moTa(c.weather_code)}<p>Cảm giác ${Math.round(c.apparent_temperature)}° · ẩm ${c.relative_humidity_2m}%</p>
+    <p>Gió ${Math.round(c.wind_speed_10m)} km/h · mưa ${n.precipitation_probability_max[0] ?? 0}%</p>
+    <p>Hôm nay ${Math.round(n.temperature_2m_min[0])}–${Math.round(n.temperature_2m_max[0])}°</p></div></div>
+    <div class="mua" role="img" aria-label="Khả năng mưa 12 giờ tới">${xs.map((p, k) => `<i class="${p >= 50 ? 'n' : p >= 30 ? 'k' : ''}" style="height:${Math.max(6, p)}%" title="${gio[k].slice(11, 13)}h: ${p}%"></i>`).join('')}</div>
+    <div class="muaNhan"><span>${gio[0].slice(11, 13)}h</span><span>khả năng mưa 12 giờ tới</span><span>${gio[gio.length - 1].slice(11, 13)}h</span></div>
+    <div class="goiY ${canh ? 'canh' : ''}">${esc(goiY)}${cuLuc ? `<br><span class="trong">Dữ liệu cũ lúc ${cuLuc}, đang mất mạng.</span>` : ''}</div>
+    <div class="ba">${ngay3}</div>`;
+}
+async function taiThoiTiet() {
+  const { lat, lon, ten } = viTriNoi();
+  $('#tenNoi').textContent = ten;
+  try {
+    const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&hourly=precipitation_probability&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FHo_Chi_Minh&forecast_days=4`, { signal: AbortSignal.timeout(15000) });
+    if (!r.ok) throw new Error('mã ' + r.status);
+    const d = await r.json();
+    veTroi(d, '');
+    ghi('w_troi', { ten, luc: gioPhut(new Date()), d });
+  } catch {
+    const cu = doc('w_troi', null);
+    if (cu && cu.ten === ten) { try { veTroi(cu.d, cu.luc); return; } catch {} }
+    $('#troi').className = 'loi';
+    $('#troi').textContent = 'Không tải được thời tiết. Kiểm tra mạng.';
+  }
+}
+setInterval(taiThoiTiet, 15 * 60000); taiThoiTiet().finally(() => { troiXong = true; });
+
+/* Đơn đặt hàng — đọc từ Firebase, báo khi có đơn mới */
+const lay = (o, ks) => { for (const k of ks) if (o[k] != null && o[k] !== '') return o[k]; return ''; };
+const thoiGian = o => { const v = lay(o, ['thoiGian','time','timestamp','createdAt','ngayTao','ngay','date']); const t = typeof v === 'number' ? v : Date.parse(v); return isNaN(t) ? 0 : t; };
+const tenKhach = o => lay(o, ['khachHang','tenKhach','khach','customer','ten','name']) || 'Không tên';
+const tienDon = o => { const v = +lay(o, ['tongTien','thanhTien','tong','total','amount','giaTri']); return v > 0 ? v : 0; };
+const loaiTT = t => /hủy|huy|cancel/i.test(t) ? 'huy' : /xong|hoàn|hoan|đã giao|da giao|done|deliver|complete/i.test(t) ? 'xong' : '';
+async function taiDon() {
+  const el = $('#don');
+  if (!cfg.fb) {
+    el.className = 'trong';
+    el.innerHTML = 'Chưa nối đơn hàng. Bấm ⚙ ở góc trên rồi dán địa chỉ Firebase.';
+    return;
+  }
+  try {
+    const goc = (/^https?:\/\//.test(cfg.fb) ? cfg.fb : 'https://' + cfg.fb).replace(/\/$/, '');
+    const r = await fetch(`${goc}/${cfg.nhanh || 'orders'}.json`, { signal: AbortSignal.timeout(15000) });
+    if (!r.ok) throw new Error('mã ' + r.status);
+    const d = await r.json() || {};
+    const ds = Object.entries(d).filter(([, o]) => o && typeof o === 'object').map(([id, o]) => ({ ...o, id })).sort((a, b) => thoiGian(b) - thoiGian(a));
+    const homNay = new Date().toDateString();
+    const dsNay = ds.filter(o => thoiGian(o) && new Date(thoiGian(o)).toDateString() === homNay);
+    const tienNay = dsNay.reduce((s, o) => s + tienDon(o), 0);
+    // Đơn chưa xong; "tồn" là đơn quá 1 ngày vẫn chưa xong
+    const chuaXong = ds.filter(o => { const tt = String(lay(o, ['trangThai','status'])); return tt && !loaiTT(tt); });
+    const laTon = o => chuaXong.includes(o) && thoiGian(o) && Date.now() - thoiGian(o) > 864e5;
+    const ton = chuaXong.filter(laTon);
+    donCache = { chuaXong: chuaXong.length, ton: ton.length };
+    if (ton.length && tb.ton !== khoaNgay()) {
+      datTB('ton', khoaNgay());
+      bao('Đơn tồn quá 1 ngày', `${ton.length} đơn chưa xong: ${ton.slice(0, 3).map(tenKhach).join(', ')}`);
+    }
+
+    // Báo đơn mới (lần đầu chỉ ghi nhớ, không báo)
+    const daThay = doc('w_donThay', null);
+    if (daThay) {
+      const moi = ds.filter(o => !daThay.includes(o.id));
+      moi.slice(0, 3).forEach(o => thongBao('Đơn mới', { body: tenKhach(o) + (tienDon(o) ? ' · ' + so(tienDon(o)) + 'đ' : '') }));
+      if (moi.length > 3) thongBao('Đơn mới', { body: `và ${moi.length - 3} đơn nữa` });
+    }
+    ghi('w_donThay', ds.slice(0, 300).map(o => o.id));
+
+    el.className = '';
+    el.innerHTML = `<div class="tomtat"><span><span class="so">${dsNay.length}</span> đơn hôm nay${tienNay ? ' · ' + so(tienNay) + 'đ' : ''}</span><span class="trong">${chuaXong.length ? chuaXong.length + ' chưa xong' : ds.length + ' tất cả'}${ton.length ? ` · <span class="loi">${ton.length} tồn</span>` : ''}</span></div>` +
+      ds.slice(0, 5).map(o => {
+        const t = thoiGian(o), tt = String(lay(o, ['trangThai','status'])), ngayDon = t && new Date(t);
+        const gio = t ? (ngayDon.toDateString() === homNay ? '' : hai(ngayDon.getDate()) + '/' + hai(ngayDon.getMonth() + 1) + ' ') + gioPhut(ngayDon) : '';
+        return `<div class="don"><span class="t">${tt ? `<span class="chip ${loaiTT(tt)}">${esc(tt)}</span>` : ''}${esc(tenKhach(o))}</span><span class="p ${laTon(o) ? 'tre' : ''}">${tienDon(o) ? so(tienDon(o)) + 'đ · ' : ''}${gio}</span></div>`;
+      }).join('');
+    $('#donCapNhat').textContent = 'lúc ' + gioPhut(new Date());
+  } catch (e) {
+    el.className = 'loi';
+    el.textContent = `Không tải được đơn (${e.message}). Kiểm tra địa chỉ và quyền đọc của Firebase.`;
+  }
+}
+setInterval(taiDon, 60000); taiDon().finally(() => { donXong = true; });
+
+/* Giá hôm nay — tự nhập, lưu trên máy. Mỗi mặt hàng có 2 giá: từ 10kg trở lên và lẻ dưới 10kg */
+const DANH_MUC = ["HĐ 128ST · Heo thịt","HĐ 222 · Gà lớn","HĐ ALPHA · Heo con tập ăn - 7kg (5kg)","HĐ ALPHA · Heo con tập ăn - 7kg (20kg)","HĐ B8888 · Bò thịt, Bò vỗ béo","HĐ D11S · Heo con tập ăn - 12kg","HĐ D12 · Heo thịt từ 15kg - 40kg (25kg)","HĐ D12 · Heo thịt từ 15kg - 40kg (40kg)","HĐ D12S · Heo siêu nạc từ 12kg - 25kg","HĐ D12ST · Heo thịt từ 12 - 25kg (25kg)","HĐ D12ST · Heo thịt từ 12 - 25kg (40kg)","HĐ D16 · Heo nái mang thai","HĐ D17S · Heo nái nuôi con","HĐ D31M · Gà con từ 1-21 ngày","HĐ D31V · Gà con từ 1-21 ngày","HĐ D32 · Gà thịt từ 22-42 ngày","HĐ D33 · Gà thịt giai đoạn vỗ béo","HĐ D41 · Vịt Cherry Valley từ 1-21 ngày","HĐ D42 · Vịt từ 22 ngày - xuất chuồng","HĐ D45 · Vịt đẻ trứng từ 12-19 tuần (25kg)","HĐ D45 · Vịt đẻ trứng từ 12-19 tuần (40kg)","HĐ D46 · Vịt đẻ trứng từ 20 tuần đến kết thúc (25kg)","HĐ D46 · Vịt đẻ trứng từ 20 tuần đến kết thúc (40kg)","HĐ D48 · Vịt đẻ trứng cao cấp (25kg)","HĐ D48 · Vịt đẻ trứng cao cấp (40kg)","HĐ D216 · Gà hậu bị từ 9 - 17 tuần","HĐ D226 · Gà đẻ trứng từ 18 tuần đến kết thúc","HĐ D7777 · Dê thịt, Dê vỗ béo","HĐ H666 · Gà từ 1 ngày đến 90 ngày","HĐ H666M · Gà từ 1 ngày tuổi - 90 ngày tuổi","HĐ V444 · Vịt từ 01 ngày tuổi - xuất chuồng","NH 111","NH 510 · Gà con thức ăn mịn","NH 511 · Gà lớn","NH 512L · Gà lớn","NH 512M · Gà con (mịn)","NH 610 · Gà lỡ","NH 628 · Gà đẻ","NH 630E · Ếch","NH 632H · Cá lóc","NH 633 · Cá điêu hồng, cá phi","NH 660 · Hỗn hợp thay sữa cho heo con","NH 735 · Cá lóc","NH 744 · Cá và lươn","NH 752S · Heo thịt","NH 852H · Heo thịt","NH 853 · Heo thịt","NH 0915 · Heo nái mang thai","NH 0916 · Heo nái nuôi con","NH 916 · Heo nái nuôi con","NH 0918 · Heo thịt","NH 0921 · Hỗn hợp thay sữa cho heo con","NH 984 · Vịt đẻ","NH 988 · Vịt con","NH 989 · Vịt lớn","NH 990 · Cám đỏ cho heo con","NH 1680 · Cám đậm đặc dùng cho heo con","NH 6318 · Cá tạp","NH 6360 · Cá rô, cá điệu hồng","NH Bắp · Bắp mảnh"];
+let gia = doc('w_gia', [{ ten: 'Lúa tươi', gia: '', le: '' }, { ten: 'Gạo', gia: '', le: '' }, { ten: 'Cám heo', gia: '', le: '' }]);
+// Nạp sẵn mã New Hope (NH) và Hải Đại (HĐ), không kèm giá. Chỉ làm một lần; mã nào đã có thì giữ nguyên.
+if (doc('w_danhMuc', 0) < 1) {
+  const co = new Set(gia.map(g => g.ten));
+  DANH_MUC.forEach(ten => { if (!co.has(ten)) gia.push({ ten, gia: '', le: '', cat: true }); });
+  ghi('w_gia', gia); ghi('w_danhMuc', 1);
+}
+const laSo = v => /^\d+$/.test(String(v ?? ''));
+const hienGia = v => laSo(v) ? so(v) : String(v ?? '');
+const boDau = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/gi, 'd').toLowerCase();
+const coGia = g => g.gia || g.le;
+// Mã New Hope/Hải Đại: chỉ gà, vịt, cá, ếch, lươn mới bán lẻ dưới 10kg; heo, bò, dê chỉ có một giá. Hàng tự thêm thì luôn có cột lẻ.
+const leOk = g => !g.cat || (!/heo/i.test(g.ten) && /(^|[\s·,(])(gà|vịt|cá|ếch|lươn|bắp)([\s·,)]|$)/i.test(g.ten));
+// Mã có sẵn tính giá theo bao (giá lẻ theo kg); hàng tự thêm tính theo kg
+const donViGia = g => g.cat ? 'đ/bao' : 'đ/kg';
+const chuaNhapGia = () => gia.some(coGia) && !gia.some(g => g.ngay === khoaNgay() || g.ngayLe === khoaNgay());
+
+/* Nhóm hàng: tự đoán theo tên (đổi tay được bằng ô chọn nhóm nhỏ dưới tên hàng tự thêm) */
+const NHOM = [
+  { id: 'lua', ten: 'Lúa gạo', ngan: 'Lúa gạo' }, { id: 'heo', ten: 'Thức ăn heo', ngan: 'Heo' },
+  { id: 'ga', ten: 'Thức ăn gà', ngan: 'Gà' }, { id: 'vit', ten: 'Thức ăn vịt', ngan: 'Vịt' },
+  { id: 'ca', ten: 'Thức ăn cá, ếch, lươn', ngan: 'Cá' }, { id: 'bo', ten: 'Thức ăn bò, dê', ngan: 'Bò, dê' },
+  { id: 'thuocGs', ten: 'Thuốc gia súc', ngan: 'Thuốc GS' }, { id: 'thuocGc', ten: 'Thuốc gia cầm', ngan: 'Thuốc GC' },
+  { id: 'khac', ten: 'Khác', ngan: 'Khác' }
+];
+function doanNhom(ten) {
+  const s = ' ' + boDau(ten).replace(/[^a-z0-9]+/g, ' ') + ' ', co = r => r.test(s);
+  if (co(/ thuoc /)) return co(/ ga | vit | gia cam | ngan | ngong /) ? 'thuocGc' : 'thuocGs';
+  if (co(/ lua | gao | tam | nep | st ?25| lut /)) return 'lua';
+  if (co(/ heo /)) return 'heo';
+  if (co(/ ga /)) return 'ga';
+  if (co(/ vit /)) return 'vit';
+  if (co(/ ca | ech | luon /)) return 'ca';
+  if (co(/ bo | de /)) return 'bo';
+  return 'khac';
+}
+const nhomCua = g => (g.nhom && NHOM.some(n => n.id === g.nhom)) ? g.nhom : doanNhom(g.ten);
+let locNhom = doc('w_locNhom', '');
+function veChip() {
+  const dem = {}; gia.forEach(g => { if (coGia(g)) { const n = nhomCua(g); dem[n] = (dem[n] || 0) + 1; } });
+  $('#chipNhom').innerHTML = [{ id: '', ngan: 'Tất cả' }, ...NHOM].map(n =>
+    `<button class="chip2" data-nhom="${n.id}" aria-pressed="${locNhom === n.id}">${esc(n.ngan)}${dem[n.id] ? ` <i>${dem[n.id]}</i>` : ''}</button>`).join('');
+}
+$('#chipNhom').addEventListener('click', e => {
+  const b = e.target.closest('[data-nhom]'); if (!b) return;
+  locNhom = b.dataset.nhom; ghi('w_locNhom', locNhom); veGia();
+});
+
+/* Tự xếp hàng giống nhau cạnh nhau: gom theo loại (lúa, nếp, gạo, tấm, cám xếp trước), cùng loại thì xếp theo tên.
+   Loại = từ loại đầu tiên có trong tên (vd "Hạt lúa dài" vẫn vào loại lúa); không có thì lấy từ đầu tiên của tên. */
+const LOAI_UU_TIEN = ['lua', 'nep', 'gao', 'tam', 'cam'];
+const tuKhoa = ten => { const t = boDau(ten).replace(/[^a-z0-9]+/g, ' ').trim().split(' '); return t.find(x => LOAI_UU_TIEN.includes(x)) || t[0] || ''; };
+function soSanhHang(a, b) {
+  const ka = tuKhoa(a.ten), kb = tuKhoa(b.ten), ra = LOAI_UU_TIEN.indexOf(ka), rb = LOAI_UU_TIEN.indexOf(kb);
+  if (ra !== rb) return (ra < 0 ? 99 : ra) - (rb < 0 ? 99 : rb);
+  if (ka !== kb) return ka.localeCompare(kb, 'vi');
+  return String(a.ten).localeCompare(String(b.ten), 'vi', { numeric: true });
+}
+/* Chế độ sửa: bấm nút ✎ ở góc tiêu đề thì mọi hàng hiện ô đổi tên, đổi nhóm, xóa; tắt đi thì hàng gọn, không chiếm chỗ */
+let cheDoSua = false;
+function datCheDoSua(bat) {
+  cheDoSua = bat; $('#suaGia').setAttribute('aria-pressed', bat);
+  if (!bat) { gia = gia.filter(g => g.ten || coGia(g)); ghi('w_gia', gia); }   // thoát chế độ sửa thì bỏ hàng mới thêm mà để trống
+  veGia();
+}
+const panelSua = (g, i) => `<div class="suaHang">
+  <input data-i="${i}" data-k="ten" value="${esc(g.ten)}" placeholder="Tên mặt hàng" aria-label="Tên mặt hàng">
+  <select data-i="${i}" data-k="nhom" aria-label="Nhóm hàng"><option value="">Nhóm: tự đoán (${esc(tenNhom(doanNhom(g.ten)))})</option>${NHOM.map(n => `<option value="${n.id}" ${g.nhom === n.id ? 'selected' : ''}>${esc(n.ten)}</option>`).join('')}</select>
+  <button class="nho" data-xoa="${i}">Xóa hàng</button></div>`;
+function veGia() {
+  veChip();
+  const q = boDau($('#timGia').value.trim());
+  // Tất cả + không gõ tìm: chỉ hiện hàng đã có giá và hàng tự thêm. Chọn một nhóm hoặc gõ tìm: hiện cả mã chưa có giá để nhập.
+  const tatCa = gia.map((g, i) => ({ g, i })).filter(({ g }) => {
+    if (locNhom && nhomCua(g) !== locNhom) return false;
+    if (q) return boDau(g.ten).includes(q);
+    return locNhom ? true : (coGia(g) || !g.cat);
+  });
+  const ds = tatCa.slice(0, 60);
+  const chuaGia = gia.filter(g => g.cat && !coGia(g)).length;
+  const theoNhom = new Map(NHOM.map(n => [n.id, []]));
+  ds.forEach(x => theoNhom.get(nhomCua(x.g)).push(x));
+  const hang = ({ g, i }) => {
+    let dl = '';
+    if (laSo(g.gia) && laSo(g.cu) && +g.gia !== +g.cu) {
+      const kq = g.gia - g.cu;
+      dl = `<span class="dl ${kq > 0 ? 'len' : 'xuong'}" title="${kq > 0 ? 'Tăng' : 'Giảm'} ${so(Math.abs(kq))} so với ${esc(g.cuNgay || 'lần trước')} (${hienGia(g.cu)})">${kq > 0 ? '▲' : '▼'}</span>`;
+    }
+    // Mã có sẵn: hiện 2 dòng (mã đậm, mô tả mờ) để thấy đủ cả quy cách 25kg/40kg; hàng tự thêm thì sửa được tên và nhóm
+    const [ma, ...mt] = g.ten.split(' · ');
+    const ten = `<span class="ten" title="${esc(g.ten)}">` + (g.cat ? `<b>${esc(ma)}</b><small>${esc(mt.join(' · '))}</small>` : `<b>${esc(g.ten) || '<i class="trong">(chưa đặt tên)</i>'}</b>`) + `</span>`;
+    const le = leOk(g) ? `<input class="tien" data-i="${i}" data-k="le" value="${esc(hienGia(g.le))}" placeholder="đ/kg" inputmode="numeric" aria-label="Giá lẻ dưới 10kg">` : '<span></span>';
+    return `<div class="gia">${ten}<span class="pc">${dl}<input class="tien" data-i="${i}" data-k="gia" value="${esc(hienGia(g.gia))}" placeholder="${donViGia(g)}" inputmode="numeric" aria-label="Giá bán${leOk(g) ? ' từ 10kg trở lên' : ''}"></span>${le}</div>` + (cheDoSua && !g.cat ? panelSua(g, i) : '');   // mã New Hope/Hải Đại là danh mục chuẩn: không có ô sửa, không xóa được
+  };
+  $('#gia').innerHTML = (ds.length ? '<div class="gia gh"><span>Mặt hàng</span><span>Giá bán</span><span>Lẻ dưới 10kg</span></div>' : '') +
+    NHOM.filter(n => theoNhom.get(n.id).length).map(n => {
+      const xs = theoNhom.get(n.id).sort((a, b) => soSanhHang(a.g, b.g));   // hàng giống nhau nằm kế nhau
+      return `<div class="nhomTd"><span>${esc(n.ten)}</span><span>${xs.length}</span></div>` + xs.map(hang).join('');
+    }).join('') +
+    (tatCa.length > 60 ? `<p class="trong">Còn ${tatCa.length - 60} kết quả nữa, gõ thêm để lọc.</p>` : '') +
+    (q && !ds.length ? '<p class="trong">Không thấy mặt hàng này. Bấm + để thêm mới.</p>' : '') +
+    (!q && !locNhom && chuaGia ? `<p class="trong">Có sẵn ${chuaGia} mã New Hope, Hải Đại chưa có giá. Chọn nhóm ở trên (Heo, Gà, Vịt, Cá…) hoặc gõ mã ở ô tìm để nhập giá.</p>` : '');
+  veNhacGia(); veBieuDo(); capNhatChonHang();
+}
+const tenNhom = id => NHOM.find(n => n.id === id).ten;
+function veNhacGia() {
+  $('#nhacGia').innerHTML = chuaNhapGia() ? '<span class="loi" title="Chưa nhập giá hôm nay" style="padding:0 6px">●</span>' : '';
+}
+/* Lịch sử giá 30 ngày: mỗi lần nhập/sửa giá thì ghi lại (g.ls = giá bán, g.lsLe = giá lẻ).
+   Ngày không đổi giá tự lấy giá của lần nhập gần nhất trước đó, nên không phải nhập lại mỗi ngày.
+   Xem dạng biểu đồ (theo ngày thật) hoặc bảng 30 ngày, và xuất ra file Excel (.csv). */
+const SO_NGAY = 30;
+let cheDoBd = 'do', bdHang = '';
+const cacNgay = () => {
+  const h = new Date(); h.setHours(12, 0, 0, 0);
+  return Array.from({ length: SO_NGAY }, (_, k) => { const d = new Date(h); d.setDate(h.getDate() - (SO_NGAY - 1 - k)); return khoaNgay(d); });
+};
+// Hàng cũ chưa có lịch sử thì lấy giá hiện tại làm mốc đầu
+const lsGia = g => (g.ls && g.ls.length) ? g.ls : (laSo(g.gia) && g.ngay ? [{ n: g.ngay, v: +g.gia }] : []);
+const lsLeCua = g => (g.lsLe && g.lsLe.length) ? g.lsLe : (laSo(g.le) && g.ngayLe ? [{ n: g.ngayLe, v: +g.le }] : []);
+const coLichSu = g => lsGia(g).length || lsLeCua(g).length;
+// Giá từng ngày; ngày nào không có lần nhập thì lấy giá lần nhập gần nhất trước đó; chưa từng có giá thì null
+function chuoi(ls, ngay) {
+  const xs = (ls || []).slice().sort((a, b) => a.n.localeCompare(b.n));
+  let j = -1, v = null;
+  return ngay.map(n => { while (j + 1 < xs.length && xs[j + 1].n <= n) { j++; v = xs[j].v == null ? null : xs[j].v; } return v; });
+}
+const ngayHienThi = k => k.slice(8) + '/' + k.slice(5, 7);
+function veBieuDo() {
+  const b = $('#bieuDo'); if (b.hidden) return;
+  const ngay = cacNgay(), ds = gia.filter(coLichSu).sort(soSanhHang);
+  const tab = `<div class="bdTab"><button data-bd="do" aria-pressed="${cheDoBd === 'do'}">Biểu đồ</button><button data-bd="bang" aria-pressed="${cheDoBd === 'bang'}">Bảng 30 ngày</button><button data-bd="xuat" title="Lưu file Excel (.csv) vào thư mục Tải xuống">Xuất Excel</button></div><p id="bdTt" class="trong"></p>`;
+  if (!ds.length) { b.innerHTML = tab + '<p class="trong">Chưa có lịch sử giá. Nhập giá hôm nay là bắt đầu ghi; ngày giá không đổi không cần nhập lại.</p>'; return; }
+  if (cheDoBd === 'bang') {
+    const x = ds.find(g => khoaGia(g.ten) === bdHang) || ds[0]; bdHang = khoaGia(x.ten);
+    const sa = chuoi(lsGia(x), ngay), sl = chuoi(lsLeCua(x), ngay), o = v => v == null ? '–' : so(v);
+    let dong = '';
+    for (let i = SO_NGAY - 1; i >= 0; i--) {
+      if (sa[i] == null && sl[i] == null) continue;
+      const doi = i > 0 && (sa[i] !== sa[i - 1] || sl[i] !== sl[i - 1]);
+      dong += `<tr class="${doi ? 'doi' : ''}"><td>${ngayHienThi(ngay[i])}</td><td>${o(sa[i])}</td><td>${o(sl[i])}</td></tr>`;
+    }
+    b.innerHTML = tab + `<select id="bdChon" aria-label="Chọn mặt hàng">${ds.map(g => `<option value="${esc(khoaGia(g.ten))}" ${khoaGia(g.ten) === bdHang ? 'selected' : ''}>${esc(g.ten)}</option>`).join('')}</select>` +
+      `<div class="bdBang"><table><thead><tr><th>Ngày</th><th>Giá bán</th><th>Giá lẻ</th></tr></thead><tbody>${dong}</tbody></table></div><p class="trong">Dòng vàng là ngày có đổi giá.</p>`;
+    return;
+  }
+  const W = 150, H = 26;
+  const hang = ds.map(g => {
+    const sa = chuoi(lsGia(g), ngay), co = sa.map((v, i) => [i, v]).filter(([, v]) => v != null);
+    if (!co.length) return '';
+    const vs = co.map(([, v]) => v), mn = Math.min(...vs), mx = Math.max(...vs);
+    const pts = co.map(([i, v]) => `${(i / (SO_NGAY - 1) * W).toFixed(1)},${(mx === mn ? H / 2 : H - 2 - (v - mn) / (mx - mn) * (H - 4)).toFixed(1)}`).join(' ');
+    return `<div class="bd"><b title="${esc(g.ten)}">${esc(g.ten)}</b><svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" preserveAspectRatio="none" role="img" aria-label="Biểu đồ giá ${esc(g.ten)} 30 ngày"><polyline points="${pts}" fill="none" stroke="${vs[vs.length - 1] >= vs[0] ? '#8CC774' : '#E8664F'}" stroke-width="1.8" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg><span class="trong">${mn === mx ? so(mn) : so(mn) + '–' + so(mx)}</span></div>`;
+  }).join('');
+  b.innerHTML = tab + (hang || '<p class="trong">Chưa có giá để vẽ.</p>') + '<p class="trong">30 ngày gần nhất, trục ngang là ngày thật.</p>';
+}
+async function xuatExcel() {
+  const ngay = cacNgay(), cell = s => '"' + String(s).replace(/"/g, '""') + '"';
+  const dong = ['sep=;', 'Ngày;Mặt hàng;Nhóm;Giá bán;Giá lẻ'];
+  gia.filter(coLichSu).sort(soSanhHang).forEach(g => {
+    const sa = chuoi(lsGia(g), ngay), sl = chuoi(lsLeCua(g), ngay);
+    ngay.forEach((n, i) => {
+      if (sa[i] == null && sl[i] == null) return;
+      dong.push([`${n.slice(8)}/${n.slice(5, 7)}/${n.slice(0, 4)}`, cell(g.ten), cell(tenNhom(nhomCua(g))), sa[i] ?? '', sl[i] ?? ''].join(';'));
+    });
+  });
+  const tt = $('#bdTt');
+  if (dong.length <= 2) { tt.textContent = 'Chưa có dữ liệu để xuất.'; return; }
+  const ten = `gia-30-ngay_${khoaNgay()}.csv`, nd = dong.join('\r\n');
+  if (coMay && window.may.luuTep) {
+    const r = await window.may.luuTep(ten, nd);
+    tt.textContent = r.loi ? 'Không lưu được: ' + r.loi : 'Đã lưu vào thư mục Tải xuống: ' + ten;
+  } else {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + nd], { type: 'text/csv;charset=utf-8' })); a.download = ten; a.click();
+  }
+}
+$('#bieuGia').onclick = e => { const b = $('#bieuDo'); b.hidden = !b.hidden; e.currentTarget.setAttribute('aria-pressed', !b.hidden); veBieuDo(); };
+$('#bieuDo').addEventListener('click', e => {
+  const n = e.target.closest('[data-bd]'); if (!n) return;
+  if (n.dataset.bd === 'xuat') xuatExcel(); else { cheDoBd = n.dataset.bd; veBieuDo(); }
+});
+$('#bieuDo').addEventListener('change', e => { if (e.target.id === 'bdChon') { bdHang = e.target.value; veBieuDo(); } });
+$('#timGia').addEventListener('input', veGia);
+
+/* Đồng bộ giá giữa các máy qua Firebase (CHỈ giá hàng, nằm ở nhánh riêng widget_gia/<mã nhóm>, không đụng đơn hàng hay doanh thu của app).
+   Mỗi mặt hàng có mốc thời gian `t`; máy nào sửa sau thì bản đó thắng. Hàng bị xóa để lại dấu {x:1} cho máy kia xóa theo. */
+const SYNC_F = ['ten', 'gia', 'le', 'nhom', 'ngay', 'ngayLe', 'cu', 'cuNgay', 'ls', 'lsLe', 't'];
+const khoaGia = ten => boDau(ten).replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 120);
+let giaXoa = doc('w_giaXoa', []);
+let dangDongBo = false, laiDongBo = false, henDayGia, giaCho = false;
+const urlGia = () => `${String(cfg.urlDongBo).replace(/\/$/, '')}/widget_gia/${encodeURIComponent(cfg.maDongBo)}`;
+const nenGia = g => { const o = {}; SYNC_F.forEach(f => { if (g[f] !== undefined && g[f] !== '') o[f] = g[f]; }); o.gia = g.gia || ''; o.le = g.le || ''; return o; };
+const apGia = (lc, rm) => {
+  SYNC_F.forEach(f => {
+    if (rm[f] !== undefined) lc[f] = f === 'ls' && !Array.isArray(rm[f]) ? Object.values(rm[f]) : rm[f];
+    else if (f === 'gia' || f === 'le') lc[f] = '';
+    else delete lc[f];
+  });
+};
+const dayGiaSau = () => { clearTimeout(henDayGia); henDayGia = setTimeout(dongBoGia, 700); };
+async function dongBoGia() {
+  if (cfg.dongBoGia === false || !cfg.urlDongBo || !cfg.maDongBo) return;
+  if (dangDongBo) { laiDongBo = true; return; }
+  dangDongBo = true;
+  try {
+    const goc = urlGia();
+    const r = await fetch(goc + '.json', { signal: AbortSignal.timeout(15000) });
+    if (!r.ok) throw new Error('mã ' + r.status);
+    const xa = await r.json() || {};
+    let doi = false;
+    const theoKhoa = new Map(gia.map(g => [khoaGia(g.ten), g]).filter(([k]) => k));
+    // 1) Máy kia -> máy này
+    for (const [k, rm] of Object.entries(xa)) {
+      if (!rm || typeof rm !== 'object') continue;
+      const lc = theoKhoa.get(k);
+      if (rm.x) { if (lc && !lc.cat && (lc.t || 0) < rm.t) { gia = gia.filter(g => g !== lc); doi = true; } continue; }
+      if (!rm.ten) continue;
+      if (!lc) { const m = {}; apGia(m, rm); m.cat = DANH_MUC.includes(m.ten); gia.push(m); doi = true; }
+      else if ((rm.t || 0) > (lc.t || 0)) { apGia(lc, rm); doi = true; }
+    }
+    // 2) Máy này -> máy kia (chỉ hàng đã có giá hoặc đã từng sửa)
+    const day = {};
+    gia.forEach(g => {
+      const k = khoaGia(g.ten), rm = xa[k];
+      if (!k || !(g.t || coGia(g))) return;
+      if (!rm || (g.t || 0) > (rm.t || 0)) { if (!g.t) g.t = Date.now(); day[k] = nenGia(g); }
+    });
+    giaXoa = giaXoa.filter(x => {
+      const lc = theoKhoa.get(x.k), rm = xa[x.k];
+      if (!(lc && (lc.t || 0) > x.t) && (!rm || (rm.t || 0) < x.t)) day[x.k] = { x: 1, t: x.t };
+      return Date.now() - x.t < 30 * 864e5;
+    });
+    if (Object.keys(day).length) {
+      const p = await fetch(goc + '.json', { method: 'PATCH', body: JSON.stringify(day), signal: AbortSignal.timeout(15000) });
+      if (!p.ok) throw new Error('mã ' + p.status);
+    }
+    ghi('w_giaXoa', giaXoa);
+    if (doi || Object.keys(day).length) ghi('w_gia', gia);
+    if (doi) { if (document.activeElement && $('#gia').contains(document.activeElement)) giaCho = true; else veGia(); }
+    $('#dongBoTt').textContent = 'Đồng bộ giá lúc ' + gioPhut(new Date());
+  } catch (e) {
+    $('#dongBoTt').textContent = `Đồng bộ giá lỗi (${e.message}). Sẽ thử lại.`;
+  } finally {
+    dangDongBo = false;
+    if (laiDongBo) { laiDongBo = false; setTimeout(dongBoGia, 300); }
+  }
+}
+// Đang gõ dở thì không vẽ lại bảng; chờ rời khỏi ô rồi mới cập nhật phần máy kia gửi sang
+$('#gia').addEventListener('focusout', () => setTimeout(() => { if (giaCho && !$('#gia').contains(document.activeElement)) { giaCho = false; veGia(); } }, 200));
+
+$('#gia').addEventListener('change', e => {
+  const { i, k } = e.target.dataset; if (i == null) return;
+  const g = gia[i]; let v = e.target.value.trim();
+  const kCu = khoaGia(g.ten);
+  if ((k === 'gia' || k === 'le') && /^[\d.,\s]+$/.test(v)) v = v.replace(/\D/g, '');
+  if (k === 'gia') {
+    if (v !== g.gia) {
+      // Sang ngày mới thì giá cũ trở thành mốc so sánh
+      if (g.ngay !== khoaNgay() && g.gia) { g.cu = g.gia; g.cuNgay = g.ngay ? g.ngay.slice(8) + '/' + g.ngay.slice(5, 7) : ''; }
+      g.ngay = khoaNgay(); g.gia = v;
+      // Ghi mốc lịch sử; xóa trắng giá thì ghi mốc "không có giá" để biểu đồ không kéo giá cũ mãi
+      if (laSo(v) || v === '') { g.ls = lsGia(g).filter(x => x.n !== khoaNgay()); g.ls.push({ n: khoaNgay(), v: v === '' ? null : +v }); g.ls = g.ls.slice(-90); }
+    }
+  } else if (k === 'le') {
+    if (v !== (g.le || '')) {
+      g.le = v; g.ngayLe = khoaNgay();
+      if (laSo(v) || v === '') { g.lsLe = lsLeCua(g).filter(x => x.n !== khoaNgay()); g.lsLe.push({ n: khoaNgay(), v: v === '' ? null : +v }); g.lsLe = g.lsLe.slice(-90); }
+    }
+  } else if (k === 'nhom') {
+    if (v) g.nhom = v; else delete g.nhom;
+  } else g.ten = v;
+  g.t = Date.now();
+  if (k === 'ten' && kCu && kCu !== khoaGia(g.ten)) { giaXoa.push({ k: kCu, t: g.t }); ghi('w_giaXoa', giaXoa); }   // đổi tên = xóa tên cũ ở máy kia
+  gia = gia.filter(x => x.ten || x.gia || x.le || (cheDoSua && x === g));   // đang sửa thì giữ hàng trống để còn gõ tên
+  ghi('w_gia', gia); veGia(); dayGiaSau();
+});
+$('#gia').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.xoa !== undefined) {
+    const i = +b.dataset.xoa, g = gia[i];
+    if (!g || g.cat) return;   // không bao giờ xóa mã trong danh mục chuẩn
+    if (!confirm(`Xóa mặt hàng "${g.ten}"? Máy kia cũng sẽ xóa theo.`)) return;
+    const t = Date.now(), k = khoaGia(g.ten);
+    if (k) { giaXoa.push({ k, t }); ghi('w_giaXoa', giaXoa); }
+    gia.splice(i, 1);
+    ghi('w_gia', gia); veGia(); dayGiaSau();
+  }
+});
+$('#suaGia').onclick = () => datCheDoSua(!cheDoSua);
+$('#themGia').onclick = () => {
+  $('#timGia').value = ''; gia.push(locNhom ? { ten: '', gia: '', le: '', nhom: locNhom } : { ten: '', gia: '', le: '' });
+  datCheDoSua(true);   // mở chế độ sửa để gõ tên và chọn nhóm cho hàng mới
+  const o = $('#gia').querySelector(`.suaHang input[data-i="${gia.length - 1}"]`); if (o) o.focus();
+};
+$('#chepGia').onclick = async e => {
+  const nut = e.currentTarget, d = new Date();
+  const gh = (v, dv) => hienGia(v) + (laSo(v) ? dv : '');
+  const dong1 = g => {
+    const phan = [];
+    if (g.gia) phan.push(gh(g.gia, g.cat ? 'đ/bao' : 'đ/kg') + (g.le && !g.cat ? ' (từ 10kg)' : ''));
+    if (g.le && leOk(g)) phan.push((g.gia ? 'lẻ ' : 'lẻ dưới 10kg ') + gh(g.le, 'đ/kg'));
+    return `${g.ten}: ${phan.join(', ')}`;
+  };
+  // Chép theo nhóm cho dễ đọc khi gửi khách
+  const khoi = NHOM.map(n => ({ n, ds: gia.filter(g => g.ten && coGia(g) && nhomCua(g) === n.id).sort(soSanhHang) })).filter(x => x.ds.length);
+  if (!khoi.length) { nut.textContent = 'Chưa có giá'; setTimeout(() => nut.textContent = 'Chép', 1500); return; }
+  try { await navigator.clipboard.writeText(`Giá ngày ${hai(d.getDate())}/${hai(d.getMonth() + 1)}:` + khoi.map(x => `\n\n${x.n.ten.toUpperCase()}\n${x.ds.map(dong1).join('\n')}`).join('')); nut.textContent = 'Đã chép ✓'; }
+  catch { nut.textContent = 'Không chép được'; }
+  setTimeout(() => nut.textContent = 'Chép', 1500);
+};
+veGia();
+setInterval(dongBoGia, 10000); setTimeout(dongBoGia, 1500);
+
+/* Nhắc việc — báo giờ, việc lặp hằng ngày, và hẹn theo ngày (+ buổi sáng/chiều/tối).
+   Không chọn ngày = việc của hôm nay, hiện mỗi ngày đến khi xong. Chọn ngày = chỉ nhắc vào ngày đó, trước đó nằm ở mục "Sắp tới". */
+let viec = doc('w_viec', []);
+let lapMoi = false;
+const GIO_BUOI = { sang: '06:30', chieu: '12:30', toi: '17:30' };
+const TEN_BUOI_V = { sang: 'Sáng', chieu: 'Chiều', toi: 'Tối' };
+const NGAN_V = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+const dmV = k => k.slice(8) + '/' + k.slice(5, 7);
+// Giờ nhắc: có giờ thì dùng giờ; chỉ có buổi thì dùng giờ mặc định của buổi; việc có ngày mà không giờ, không buổi thì 07:00
+const gioNhacViec = v => v.gio || GIO_BUOI[v.buoi] || (v.ngay ? '07:00' : '');
+const quaGio = v => {
+  const nay = khoaNgay();
+  if (v.ngay && v.ngay < nay) return true;    // việc hẹn ngày đã qua mà chưa xong
+  if (v.ngay && v.ngay > nay) return false;
+  const g = gioNhacViec(v); if (!g) return false;
+  const [h, m] = g.split(':'); const t = new Date(); t.setHours(+h, +m, 0, 0); return Date.now() >= t;
+};
+const denHan = v => !v.ngay || v.ngay <= khoaNgay();   // việc cần làm từ hôm nay (kể cả quá hạn)
+const nhanViec = (v, boNgay) => [!boNgay && v.ngay && v.ngay !== khoaNgay() ? NGAN_V[new Date(+v.ngay.slice(0, 4), +v.ngay.slice(5, 7) - 1, +v.ngay.slice(8)).getDay()] + ' ' + dmV(v.ngay) : '', v.gio || TEN_BUOI_V[v.buoi] || ''].filter(Boolean).join(' · ');
+let vRange = doc('w_vRange', 'ngay'), vNeo = new Date();
+var lichSan = false;   // var: biến lich khai báo ở khối sau; chỉ dùng khi đã sẵn sàng
+const nhanLichNgay = (e, boNgay) => [!boNgay && e.ngay !== khoaNgay() ? NGAN_V[new Date(+e.ngay.slice(0, 4), +e.ngay.slice(5, 7) - 1, +e.ngay.slice(8)).getDay()] + ' ' + dmV(e.ngay) : '', e.gio || TEN_BUOI_V[e.buoi] || ''].filter(Boolean).join(' · ');
+const hangLich = (e, bn) => `<div class="viec lichV ${e.xong ? 'xong' : ''}">
+      <input type="checkbox" data-lich="${esc(e.id)}" ${e.xong ? 'checked' : ''} aria-label="Đã xong">
+      <span class="nd">🎓 ${esc(e.ten)}${e.noi ? '<small class="trong" style="display:block">' + esc(e.noi) + '</small>' : ''}</span><span class="gioN">${esc(nhanLichNgay(e, bn))}</span>
+      <button data-lich-xoa="${esc(e.id)}" title="Xóa lịch này" aria-label="Xóa lịch này">✕</button></div>`;
+function veViec() {
+  const d0 = new Date(), nay = khoaNgay(), hon7 = khoaNgay(new Date(d0.getFullYear(), d0.getMonth(), d0.getDate() + 7));
+  viec.sort((a, b) => a.xong - b.xong || (a.ngay || '').localeCompare(b.ngay || '') || (gioNhacViec(a) || '99').localeCompare(gioNhacViec(b) || '99'));
+  if (lichSan) xepLich();
+  // Lịch (học, hẹn) lấy thẳng từ mục Lịch: hôm nay hiện cùng việc, 7 ngày tới nằm ở "Sắp tới"
+  const lichNay = lichSan ? lich.filter(e => e.ngay === nay) : [], lichSap = lichSan ? lich.filter(e => e.ngay > nay && e.ngay <= hon7) : [];
+  const hang = (v, bn) => `<div class="viec ${v.xong ? 'xong' : ''} ${!v.xong && quaGio(v) ? 'tre' : ''}">
+      <input type="checkbox" data-id="${v.id}" ${v.xong ? 'checked' : ''} aria-label="Đã xong">
+      <span class="nd">${esc(v.nd)}</span><span class="gioN">${v.lap ? '↻ ' : ''}${esc(nhanViec(v, bn))}</span>
+      <button data-xoa="${v.id}" title="Xóa việc" aria-label="Xóa việc">✕</button></div>`;
+  const dangLam = viec.filter(denHan), sapViec = viec.filter(v => !denHan(v));
+  const sap = [...sapViec.map(v => ({ k: v.ngay, h: hang(v) })), ...lichSap.map(e => ({ k: e.ngay, h: hangLich(e) }))].sort((x, y) => x.k.localeCompare(y.k));
+  const con = dangLam.filter(v => !v.xong).length + lichNay.filter(e => !e.xong).length;
+  $('#demViec').textContent = con ? `còn ${con}` : '';
+  $('#xoaXong').hidden = !viec.some(v => v.xong);
+  document.querySelectorAll('[data-vr=ngay],[data-vr=tuan],[data-vr=thang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.vr === vRange));
+  $('#vDieu').hidden = vRange === 'ngay'; $('#vTd').hidden = vRange === 'ngay';
+  if (vRange !== 'ngay' && calSan) {
+    // Liệt kê cả tuần hoặc cả tháng, gom theo ngày (kể cả việc đã xong để xem lại)
+    let dau, soNgay;
+    if (vRange === 'tuan') { dau = congNgay(vNeo, -thuHai0(vNeo)); soNgay = 7; $('#vTd').textContent = `Tuần ${ddmm(dau)} – ${ddmm(congNgay(dau, 6))}/${congNgay(dau, 6).getFullYear()}`; }
+    else { dau = new Date(vNeo.getFullYear(), vNeo.getMonth(), 1); soNgay = new Date(vNeo.getFullYear(), vNeo.getMonth() + 1, 0).getDate(); $('#vTd').textContent = `Tháng ${vNeo.getMonth() + 1}/${vNeo.getFullYear()}`; }
+    let html = '';
+    for (let i = 0; i < soNgay; i++) {
+      const d = congNgay(dau, i), k = khoaNgay(d);
+      const l = lichSan ? lich.filter(e => e.ngay === k) : [];
+      const v = viec.filter(x => x.ngay === k || (!x.ngay && x.xong && x.ngayXong === k) || (!x.ngay && !x.xong && k === nay));
+      if (!l.length && !v.length) continue;
+      html += `<div class="nhomTd" style="margin-top:${html ? 8 : 2}px"><span>${k === nay ? 'Hôm nay · ' : ''}${NGAN_V[d.getDay()]} ${ddmm(d)}</span><span>${l.length + v.length} mục</span></div>` + l.map(e => hangLich(e, true)).join('') + v.map(x => hang(x, true)).join('');
+    }
+    $('#viec').innerHTML = html || `<p class="trong">Không có việc hay lịch trong ${vRange === 'tuan' ? 'tuần' : 'tháng'} này.</p>`;
+    if (calSan) veCal();
+    return;
+  }
+  $('#viec').innerHTML = (lichNay.length || dangLam.length ? lichNay.map(hangLich).join('') + dangLam.map(hang).join('') : '<p class="trong">Chưa có việc hay lịch nào cho hôm nay. Gõ bên dưới để thêm.</p>') +
+    (sap.length ? `<div class="nhomTd" style="margin-top:10px"><span>Sắp tới</span><span>${sap.length}</span></div>` + sap.map(x => x.h).join('') : '');
+  if (calSan) veCal();
+}
+$('#vTab').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const r = b.dataset.vr;
+  if (r === 'ngay' || r === 'tuan' || r === 'thang') { vRange = r; vNeo = new Date(); ghi('w_vRange', r); }
+  else if (r === 'truoc' || r === 'sau') { const h = r === 'sau' ? 1 : -1; vNeo = vRange === 'tuan' ? congNgay(vNeo, 7 * h) : new Date(vNeo.getFullYear(), vNeo.getMonth() + h, 1); }
+  else if (r === 'nay') vNeo = new Date();
+  veViec();
+});
+$('#viec').addEventListener('click', e => {
+  const lichId = e.target.dataset.lich, lichXoa = e.target.dataset.lichXoa;
+  if (lichId || lichXoa) {
+    const x = lich.find(l => l.id === (lichId || lichXoa)); if (!x) return;
+    if (lichId) { x.xong = e.target.checked; x.ngayXong = x.xong ? khoaNgay() : undefined; ghi('w_lich', lich); veLich(); }
+    else if (confirm(`Xóa lịch "${x.ten}" ngày ${ddmm(ngayLich(x.ngay))}?`)) { lich = lich.filter(l => l.id !== lichXoa); ghi('w_lich', lich); veLich(); }
+    return;
+  }
+  const id = e.target.dataset.id, xoa = e.target.dataset.xoa;
+  if (id) { const v = viec.find(x => x.id == id); v.xong = e.target.checked; v.ngayXong = khoaNgay(); }
+  else if (xoa) viec = viec.filter(x => x.id != xoa);
+  else return;
+  ghi('w_viec', viec); veViec();
+});
+$('#xoaXong').onclick = () => { viec = viec.filter(v => !v.xong || v.lap); ghi('w_viec', viec); veViec(); };
+function themViec() {
+  const o = $('#viecMoi'), tb = $('#viecTb');
+  if (!o.value.trim()) { tb.textContent = 'Gõ nội dung việc trước rồi bấm +.'; return; }
+  const ngay = $('#ngayMoi').value;
+  viec.push({ id: Date.now(), nd: o.value.trim(), gio: $('#gioMoi').value, buoi: $('#buoiMoi').value, ngay: ngay || undefined, xong: false, daBao: '', lap: lapMoi && !ngay });
+  tb.textContent = ngay ? `Đã lưu việc ngày ${dmV(ngay)}.` : 'Đã lưu việc.';
+  setTimeout(() => { if (tb.textContent.startsWith('Đã lưu')) tb.textContent = ''; }, 3500);
+  o.value = ''; $('#gioMoi').value = ''; $('#buoiMoi').value = ''; $('#ngayMoi').value = ''; o.focus();
+  ghi('w_viec', viec); veViec();
+}
+$('#viecMoi').addEventListener('keydown', e => { if (e.key === 'Enter') themViec(); });
+$('#addViec').onclick = themViec;
+$('#lapMoi').onclick = e => { lapMoi = !lapMoi; e.currentTarget.setAttribute('aria-pressed', lapMoi); };
+function kiemTraNhac() {
+  let doi = false;
+  const d = new Date(), nay = khoaNgay(), mai = khoaNgay(new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)), phut = d.getHours() * 60 + d.getMinutes();
+  for (const v of viec) {
+    if (v.lap && v.xong && v.ngayXong !== nay) { v.xong = false; doi = true; }   // việc lặp: sang ngày mới thì mở lại
+    if (!v.xong && denHan(v) && quaGio(v) && v.daBao !== nay) {
+      thongBao('Nhắc việc', { body: `${nhanViec(v) || gioNhacViec(v)} · ${v.nd}` });
+      v.daBao = nay; doi = true;
+    }
+    // Việc hẹn ngày mai: tối hôm trước (20h) nhắc một lần
+    if (!v.xong && v.ngay === mai && v.baoTruoc !== mai && phut >= 20 * 60) { v.baoTruoc = mai; doi = true; thongBao('Mai có việc', { body: `${nhanViec(v)} · ${v.nd}` }); }
+  }
+  if (doi) ghi('w_viec', viec);
+  veViec();
+}
+setInterval(kiemTraNhac, 30000); kiemTraNhac();
+
+/* Công nợ — nhắc khi đến hạn */
+const moLink = url => coMay ? window.may.moLink(url) : window.open(url);
+const ngayVN = k => k ? k.slice(8) + '/' + k.slice(5, 7) : '';
+const chiSo = v => String(v ?? '').replace(/\D/g, '');
+let no = doc('w_no', []);
+function veNo() {
+  no.sort((a, b) => (a.han || '9999').localeCompare(b.han || '9999'));
+  const nay = khoaNgay();
+  $('#no').innerHTML = no.length ? no.map(n => {
+    const cls = n.han && n.han < nay ? 'tre' : n.han === nay ? 'nay' : '';
+    return `<div class="don"><span class="t">${esc(n.ten)}</span><span class="p ${cls}">${so(n.tien)}đ${n.han ? ' · ' + ngayVN(n.han) : ''}<button class="nho" data-tra="${n.id}" title="Đã thu tiền" aria-label="Đã thu tiền">✓</button></span></div>`;
+  }).join('') : '<p class="trong">Chưa có khoản nợ nào.</p>';
+  const tong = no.reduce((s, n) => s + n.tien, 0);
+  $('#tongNo').textContent = tong ? 'tổng ' + so(tong) + 'đ' : '';
+  if (calSan) veCal();
+}
+function themNo() {
+  const ten = $('#noTen').value.trim(), tien = +chiSo($('#noTien').value);
+  if (!ten || !tien) return;
+  no.push({ id: Date.now(), ten, tien, han: $('#noHan').value });
+  $('#noTen').value = $('#noTien').value = $('#noHan').value = ''; $('#noTen').focus();
+  ghi('w_no', no); veNo();
+}
+$('#addNo').onclick = themNo;
+$('#noTien').addEventListener('keydown', e => { if (e.key === 'Enter') themNo(); });
+$('#noTien').addEventListener('input', e => { const s = chiSo(e.target.value); e.target.value = s ? so(s) : ''; });
+$('#no').addEventListener('click', e => {
+  const id = e.target.dataset.tra; if (!id) return;
+  const n = no.find(x => x.id == id);
+  if (n && confirm(`${n.ten} đã trả ${so(n.tien)}đ? Khoản này sẽ được xóa khỏi danh sách.`)) { no = no.filter(x => x.id != id); ghi('w_no', no); veNo(); }
+});
+veNo();
+
+/* Ghi chú nhanh */
+let gc = doc('w_gc', []);
+function veGc() {
+  $('#ghichu').innerHTML = gc.length ? gc.map(g => `<div class="viec"><span class="nd">${esc(g.nd)}</span><button data-xoa="${g.id}" title="Xóa ghi chú" aria-label="Xóa ghi chú">✕</button></div>`).join('') : '<p class="trong">Chưa có ghi chú.</p>';
+  $('#demGc').textContent = gc.length || '';
+}
+function themGc() { const o = $('#gcMoi'); if (!o.value.trim()) return; gc.unshift({ id: Date.now(), nd: o.value.trim() }); o.value = ''; ghi('w_gc', gc); veGc(); }
+$('#gcMoi').addEventListener('keydown', e => { if (e.key === 'Enter') themGc(); });
+$('#addGc').onclick = themGc;
+$('#ghichu').addEventListener('click', e => { const id = e.target.dataset.xoa; if (!id) return; gc = gc.filter(x => x.id != id); ghi('w_gc', gc); veGc(); });
+veGc();
+
+/* Khách quen — mở Zalo / chép số điện thoại */
+let kq = doc('w_kq', []);
+function veKq() {
+  const q = $('#kqTim').value.trim().toLowerCase();
+  const ds = kq.filter(k => !q || k.ten.toLowerCase().includes(q) || k.sdt.includes(q)).sort((a, b) => a.ten.localeCompare(b.ten, 'vi'));
+  $('#kq').innerHTML = ds.length ? ds.map(k => `<div class="don"><span class="t">${esc(k.ten)}<br><span class="trong">${esc(k.sdt)}</span></span><span class="p"><button class="nho" data-zalo="${k.id}" title="Mở Zalo">Zalo</button><button class="nho" data-chep="${k.id}" title="Chép số điện thoại">Chép</button><button data-xoa="${k.id}" title="Xóa khách" aria-label="Xóa khách">✕</button></span></div>`).join('')
+    : `<p class="trong">${kq.length ? 'Không tìm thấy.' : 'Chưa có khách. Thêm bên dưới.'}</p>`;
+  $('#demKq').textContent = kq.length || '';
+}
+function themKq() {
+  const ten = $('#kqTen').value.trim(), sdt = $('#kqSdt').value.trim();
+  if (!ten || !chiSo(sdt)) return;
+  kq.push({ id: Date.now(), ten, sdt }); $('#kqTen').value = $('#kqSdt').value = ''; $('#kqTen').focus();
+  ghi('w_kq', kq); veKq();
+}
+$('#addKq').onclick = themKq;
+$('#kqSdt').addEventListener('keydown', e => { if (e.key === 'Enter') themKq(); });
+$('#kqTim').addEventListener('input', veKq);
+$('#kq').addEventListener('click', async e => {
+  const { zalo, chep, xoa } = e.target.dataset, nut = e.target;
+  if (zalo) { const k = kq.find(x => x.id == zalo); if (k) moLink('https://zalo.me/' + chiSo(k.sdt)); }
+  else if (chep) {
+    const k = kq.find(x => x.id == chep);
+    try { await navigator.clipboard.writeText(chiSo(k.sdt)); nut.textContent = 'Đã chép'; setTimeout(() => nut.textContent = 'Chép', 1200); } catch {}
+  } else if (xoa) { kq = kq.filter(x => x.id != xoa); ghi('w_kq', kq); veKq(); }
+});
+veKq();
+
+/* Tính nhanh: số lượng × đơn vị × giá */
+function capNhatChonHang() {
+  const o = $('#tinhHang'), cu = o.value;
+  o.innerHTML = '<option value="">Nhập giá tay</option>' + gia.map((g, i) => ({ g, i })).filter(({ g }) => g.ten && (laSo(g.gia) || laSo(g.le))).map(({ g, i }) => `<option value="${i}">${esc(g.ten)}</option>`).join('');
+  o.value = [...o.options].some(x => x.value === cu) ? cu : '';
+}
+function tinhNhanh() {
+  const sl = parseFloat(String($('#tinhSL').value).replace(',', '.')) || 0, kg = sl * +$('#tinhDV').value, idx = $('#tinhHang').value;
+  let gia1, le = false, bao = null;
+  if (idx !== '' && gia[+idx]) {
+    // Dưới 10kg thì lấy giá lẻ (nếu mặt hàng có bán lẻ), từ 10kg trở lên lấy giá bán chính
+    const g = gia[+idx];
+    le = kg > 0 && kg < 10 && leOk(g) && laSo(g.le);
+    if (g.cat && !le) {
+      // Mã có sẵn: giá chính là đ/bao. Chọn đơn vị bao thì tính theo số bao, chọn kg/tấn thì quy ra bao theo quy cách trong tên (mặc định 25kg)
+      const baoKg = +(g.ten.match(/\((\d+)kg\)/) || [])[1] || 25;
+      bao = $('#tinhDV').selectedOptions[0].dataset.bao ? sl : kg / baoKg;
+      gia1 = laSo(g.gia) ? +g.gia : 0;
+    } else gia1 = le ? +g.le : laSo(g.gia) ? +g.gia : +g.le;
+    $('#tinhGia').value = so(gia1);
+  } else gia1 = +chiSo($('#tinhGia').value);
+  $('#tinhKg').textContent = kg ? (bao !== null ? `${so(Math.round(bao * 100) / 100)} bao · ${so(Math.round(kg * 100) / 100)} kg` : `${so(Math.round(kg * 100) / 100)} kg${le ? ' · giá lẻ' : ''}`) : '';
+  $('#tinhTien').textContent = so(Math.round((bao !== null ? bao : kg) * gia1)) + 'đ';
+}
+$('#tinhHang').onchange = tinhNhanh;
+['#tinhGia', '#tinhSL'].forEach(s => $(s).addEventListener('input', tinhNhanh));
+$('#tinhDV').onchange = tinhNhanh;
+capNhatChonHang();
+
+/* Xe hôm nay — đọc từ server biển số ở cổng 5690 (qua tiến trình chính để khỏi vướng CORS) */
+let xeDem = null;
+async function taiXe() {
+  const sec = document.querySelector('section[data-k=xe]'), el = $('#xe');
+  sec.hidden = cfg.xe === false; if (sec.hidden) return;
+  if (!coMay) { el.className = 'trong'; el.textContent = 'Chạy bằng chay.bat để xem xe hôm nay.'; return; }
+  const d = await window.may.xe();
+  if (d.loi) {
+    el.className = 'trong'; $('#demXe').textContent = '';
+    el.textContent = d.loi === 'matkhau' ? 'Server biển số đang đặt mật khẩu nên widget chưa đọc được.' : 'Chưa bật server biển số (cổng 5690).';
+    return;
+  }
+  const xe = d.xe || [], chua = (d.chua_nhan_dang || []).length;
+  if (xeDem !== null && xe.length > xeDem) {
+    const moi = xe.slice(0, xe.length - xeDem);
+    moi.slice(0, 3).forEach(e => bao('Xe vừa tới', `${e.bien_so}${e.ten_khach ? ' · ' + e.ten_khach : ' · khách mới'}`));
+  }
+  xeDem = xe.length;
+  $('#demXe').textContent = xe.length + ' xe';
+  el.className = '';
+  el.innerHTML = `<div class="tomtat"><span><span class="so">${xe.length}</span> xe hôm nay</span><span class="trong">${chua ? chua + ' chưa nhận dạng' : ''}</span></div>` +
+    (xe.slice(0, 5).map(e => `<div class="don"><span class="t"><span class="bs">${esc(e.bien_so)}</span> ${e.ten_khach ? esc(e.ten_khach) : '<span class="trong">khách mới</span>'}</span><span class="p">${e.lan_ghe > 1 ? 'lần ' + e.lan_ghe + ' · ' : ''}${gioPhut(new Date(e.thoi_gian))}</span></div>`).join('') || '<p class="trong">Hôm nay chưa có xe.</p>');
+}
+setInterval(taiXe, 30000); taiXe();
+
+/* Điều khiển: bật/tắt chương trình chạy ngầm + mở nhanh các tool local (danh sách cố định nằm trong main.js) */
+async function taiDk() {
+  const el = $('#dk');
+  if (!coMay || !window.may.dk) { el.className = 'trong'; el.textContent = 'Chạy bằng chay.bat để dùng mục này.'; return; }
+  let d; try { d = await window.may.dk.ds(); } catch { return; }
+  el.className = '';
+  el.innerHTML = d.dichvu.map(s => `<div class="don dk"><span class="t"><i class="cham ${s.chay ? 'bat' : ''}"></i>${esc(s.ten)}</span><span class="p">` +
+    (s.chay ? `<button data-dk="lai" data-id="${s.id}" title="Tắt rồi bật lại">↻</button>${s.url ? `<button data-dk="mo" data-id="${s.id}">Mở</button>` : ''}<button data-dk="tat" data-id="${s.id}">Tắt</button>`
+            : `<button data-dk="bat" data-id="${s.id}">Bật</button>`) + `</span></div>`).join('') +
+    `<div class="luoiTool">${d.mo.filter(m => m.co).map(m => `<button data-dk="mo" data-id="${m.id}">${esc(m.ten)}</button>`).join('')}</div>`;
+}
+$('#dk').addEventListener('click', async e => {
+  const b = e.target.closest('button[data-dk]'); if (!b) return;
+  const lam = b.dataset.dk, id = b.dataset.id;
+  if (lam === 'tat' && !confirm('Tắt chương trình này?')) return;
+  b.disabled = true; $('#dkTb').textContent = '…';
+  const r = await window.may.dk[lam](id);
+  $('#dkTb').textContent = r.loi ? r.loi : (r.ghi || '');
+  setTimeout(() => { if (!r.ghi && !r.loi) $('#dkTb').textContent = ''; }, 4000);
+  [800, 4000, 12000].forEach(t => setTimeout(taiDk, t));
+});
+setInterval(taiDk, 15000); taiDk();
+
+/* ===== Lễ trong năm: biểu tượng, đếm ngược và hiệu ứng rơi (tuyết, hoa, pháo giấy, cánh sen) ===== */
+const SVG_LE = {
+  tuyet: `<svg viewBox="0 0 64 64" role="img" aria-label="Người tuyết"><ellipse cx="32" cy="60" rx="18" ry="3" fill="rgba(255,255,255,.12)"/><path d="M18 40 L8 32 M46 40 L56 32" stroke="#7A5A3A" stroke-width="2.2" stroke-linecap="round"/><circle cx="32" cy="43" r="15" fill="#F4F8FB" stroke="#9FB6C8" stroke-width="1.5"/><circle cx="32" cy="22" r="10.5" fill="#F4F8FB" stroke="#9FB6C8" stroke-width="1.5"/><rect x="21" y="11" width="22" height="3.6" rx="1.5" fill="#2B2B2B"/><rect x="26" y="3" width="12" height="9" rx="1.5" fill="#2B2B2B"/><rect x="26" y="8.2" width="12" height="2.2" fill="#D64545"/><circle cx="28" cy="21" r="1.4" fill="#222"/><circle cx="36" cy="21" r="1.4" fill="#222"/><path d="M32 24 L42 26 L32 27.6Z" fill="#F08A24"/><path d="M23 32 Q32 37 41 32 L41 35.5 Q32 41 23 35.5Z" fill="#D64545"/><circle cx="32" cy="43" r="1.5" fill="#333"/><circle cx="32" cy="49" r="1.5" fill="#333"/></svg>`,
+  cay: `<svg viewBox="0 0 64 64" role="img" aria-label="Cây thông Noel"><rect x="29" y="53" width="6" height="8" fill="#7A5A3A"/><polygon points="32,10 46,26 18,26" fill="#2E9E5B"/><polygon points="32,20 50,42 14,42" fill="#27894F"/><polygon points="32,30 55,56 9,56" fill="#1F7A44"/><polygon points="32,1 34.2,6.6 40,6.8 35.4,10.4 37,16 32,12.8 27,16 28.6,10.4 24,6.8 29.8,6.6" fill="#F6D04D"/><circle cx="27" cy="38" r="2.3" fill="#E8664F"/><circle cx="38" cy="45" r="2.3" fill="#F6D04D"/><circle cx="25" cy="50" r="2.3" fill="#6FB6E8"/><circle cx="40" cy="52" r="2.3" fill="#E8664F"/><circle cx="33" cy="25" r="2" fill="#F6D04D"/></svg>`,
+  chay: `<svg viewBox="0 0 64 64" role="img" aria-label="Phật ngồi trên đài sen"><circle cx="32" cy="22" r="18" fill="none" stroke="#E2B33C" stroke-width="1.2" opacity=".55"/><path d="M32 8.2 q2.6 -3.6 0 -5.6 q-2.6 2 0 5.6z" fill="#E8C468"/><circle cx="32" cy="15" r="6.5" fill="#E8C468"/><path d="M32 21 C21 22 16 33 15 42 L49 42 C48 33 43 22 32 21Z" fill="#E2B33C"/><ellipse cx="32" cy="40" rx="6.5" ry="3" fill="#C99A2B"/><path d="M15 42 C15 47 22 49.5 32 49.5 C42 49.5 49 47 49 42Z" fill="#C99A2B"/><path d="M8 53 Q19 46 32 57 Q45 46 56 53 Q45 63 32 61 Q19 63 8 53Z" fill="#F2A6C0"/><path d="M21 52 Q32 42 43 52 Q32 61 21 52Z" fill="#F8C4D6"/></svg>`,
+  co: `<svg viewBox="0 0 64 64" role="img" aria-label="Cờ Việt Nam"><rect x="6" y="14" width="52" height="36" rx="3" fill="#DA251D"/><polygon points="32,19.5 35.6,29.6 46.4,29.8 37.8,36.2 41,46.4 32,40.2 23,46.4 26.2,36.2 17.6,29.8 28.4,29.6" fill="#FFDE00"/></svg>`
+};
+const btLe = (k, px) => SVG_LE[k]
+  ? `<span class="leSvg" style="width:${px}px;height:${px}px">${SVG_LE[k]}</span>`
+  : `<span class="emo" style="font-size:${Math.round(px * .78)}px;line-height:1">${k}</span>`;
+
+// Lễ dương lịch (th = tháng, ng = ngày); cs = còn tối đa bao nhiêu ngày thì hiện banner
+const LE_DL = [
+  { th: 1, ng: 1, ten: 'Tết Dương lịch', bt: '🎆', cs: 7 },
+  { th: 2, ng: 14, ten: 'Valentine', bt: '❤️', cs: 3 },
+  { th: 3, ng: 8, ten: 'Quốc tế Phụ nữ', bt: '🌹', cs: 3 },
+  { th: 4, ng: 30, ten: 'Giải phóng miền Nam', bt: 'co', cs: 5 },
+  { th: 5, ng: 1, ten: 'Quốc tế Lao động', bt: 'co', cs: 3 },
+  { th: 6, ng: 1, ten: 'Quốc tế Thiếu nhi', bt: '🎈', cs: 3 },
+  { th: 9, ng: 2, ten: 'Quốc khánh', bt: 'co', cs: 7 },
+  { th: 10, ng: 20, ten: 'Ngày Phụ nữ Việt Nam', bt: '💐', cs: 3 },
+  { th: 10, ng: 31, ten: 'Halloween', bt: '🎃', cs: 3 },
+  { th: 11, ng: 20, ten: 'Ngày Nhà giáo Việt Nam', bt: '🎓', cs: 3 },
+  { th: 12, ng: 24, ten: 'Đêm Giáng sinh', bt: 'cay', cs: 21, noel: true },
+  { th: 12, ng: 25, ten: 'Giáng sinh', bt: 'cay', cs: 21, noel: true }
+];
+// Lễ âm lịch (ng = ngày âm, th = tháng âm); chay = ngày ăn chay
+const LE_AL = [
+  { ng: 1, th: 1, ten: 'Tết Nguyên Đán (mùng 1)', bt: '🌸', cs: 21 },
+  { ng: 2, th: 1, ten: 'Tết Nguyên Đán (mùng 2)', bt: '🌸', cs: 21 },
+  { ng: 3, th: 1, ten: 'Tết Nguyên Đán (mùng 3)', bt: '🌸', cs: 21 },
+  { ng: 10, th: 1, ten: 'Vía Thần Tài', bt: '💰', cs: 7 },
+  { ng: 15, th: 1, ten: 'Rằm tháng Giêng', bt: '🏮', cs: 5, chay: true },
+  { ng: 10, th: 3, ten: 'Giỗ Tổ Hùng Vương', bt: '🏯', cs: 7 },
+  { ng: 15, th: 4, ten: 'Lễ Phật Đản', bt: 'chay', cs: 7, chay: true },
+  { ng: 5, th: 5, ten: 'Tết Đoan Ngọ', bt: '🌿', cs: 3 },
+  { ng: 15, th: 7, ten: 'Lễ Vu Lan', bt: 'chay', cs: 7, chay: true },
+  { ng: 15, th: 8, ten: 'Tết Trung thu', bt: '🏮', cs: 7 },
+  { ng: 23, th: 12, ten: 'Ông Táo chầu trời', bt: '🐟', cs: 3 }
+];
+let leCache = { ngay: '', ds: [] };
+let ngayThu = null;   // chỉ dùng để thử giao diện theo ngày giả lập
+const homNayLe = () => ngayThu || new Date();
+
+/* Lễ của một ngày: d = ngày dương, a/aMai = âm lịch của ngày đó và ngày kế tiếp */
+function leCuaNgay(d, a, aMai) {
+  const trong = [];
+  LE_DL.forEach(e => { if (e.th === d.getMonth() + 1 && e.ng === d.getDate()) trong.push(e); });
+  LE_AL.forEach(e => { if (e.ng === a.ngay && e.th === a.thang && !a.nhuan) trong.push(e); });
+  if (aMai.ngay === 1 && aMai.thang === 1) trong.push({ ten: 'Giao thừa', bt: '🎆', cs: 7 });
+  // Mùng một / Rằm hằng tháng: ngày ăn chay (chỉ hiện khi không trùng lễ khác)
+  if (!trong.length && (a.ngay === 1 || a.ngay === 15)) trong.push({ ten: a.ngay === 1 ? 'Mùng một' : 'Rằm', bt: 'chay', cs: 1, chay: true, chung: true });
+  return trong;
+}
+/* Danh sách lễ trong `soNgay` ngày tới (kèm số ngày còn lại `con`) */
+function leSapToi(h, soNgay = 130) {
+  const ngay = k => new Date(h.getFullYear(), h.getMonth(), h.getDate() + k);
+  const al = Array.from({ length: soNgay + 2 }, (_, k) => { const d = ngay(k); return AL(d.getDate(), d.getMonth() + 1, d.getFullYear()); });
+  const kq = [];
+  for (let k = 0; k <= soNgay; k++) {
+    const d = ngay(k);
+    leCuaNgay(d, al[k], al[k + 1]).forEach(e => kq.push({ ...e, d, con: k }));
+  }
+  return kq;
+}
+/* Hiệu ứng rơi theo ngày: tuyết (Noel), hoa mai đào (Tết Nguyên Đán), pháo giấy (Tết Dương, 30/4, Quốc khánh), cánh sen (mùng một, rằm) */
+function loaiHieuUng(h) {
+  const th = h.getMonth() + 1, ng = h.getDate(), a = AL(ng, th, h.getFullYear());
+  if (th === 12 && ng >= 15 && ng <= 26) return 'tuyet';
+  if ((a.thang === 12 && a.ngay >= 23) || (a.thang === 1 && a.ngay <= 7)) return 'hoa';
+  if ((th === 12 && ng === 31) || (th === 1 && ng <= 2) || (th === 4 && ng === 30) || (th === 5 && ng === 1) || (th === 9 && ng <= 3)) return 'phao';
+  if (a.ngay === 1 || a.ngay === 15) return 'sen';
+  return '';
+}
+const nhanCon = e => e.con === 0 ? 'Hôm nay' : e.con === 1 ? 'Ngày mai' : `Còn ${e.con} ngày`;
+const nhanNgan = e => e.con === 0 ? 'hôm nay' : e.con === 1 ? 'mai' : `${e.con} ngày`;
+const ddmm = d => `${hai(d.getDate())}/${hai(d.getMonth() + 1)}`;
+
+function veLe() {
+  const h = homNayLe(), key = khoaNgay(h);
+  if (leCache.ngay !== key) leCache = { ngay: key, ds: leSapToi(h) };
+  const ds = leCache.ds, bn = $('#leBanner'), ic = $('#leIcon');
+  const e = ds.find(x => x.con <= x.cs);
+  if (e) {
+    bn.hidden = false;
+    bn.innerHTML = `${btLe(e.bt, 28)}<span class="leTx"><b>${esc(e.ten)}</b><small>${nhanCon(e)} · ${ddmm(e.d)}${e.chay ? ' · ngày ăn chay' : ''}</small></span>`;
+    // Biểu tượng lớn cạnh đồng hồ: Noel (10 ngày trước) có cây thông, ngày 24/25 là người tuyết; lễ khác hiện khi còn tối đa 2 ngày
+    const lon = e.noel ? (e.con <= 1 ? 'tuyet' : e.con <= 10 ? 'cay' : '') : (e.con <= 2 ? e.bt : '');
+    ic.hidden = !lon; ic.innerHTML = lon ? btLe(lon, 64) : '';
+  } else { bn.hidden = true; ic.hidden = true; }
+  // Mục "Lễ sắp tới": 7 mục gần nhất, chỉ giữ một dòng mùng một/rằm
+  let daCoChung = false;
+  const hien = ds.filter(x => { if (x.chung) { if (daCoChung) return false; daCoChung = true; } return true; }).slice(0, 7);
+  $('#leDs').innerHTML = hien.map(x => `<div class="don"><span class="t"><span class="leNho">${btLe(x.bt, 20)}</span>${esc(x.ten)}</span><span class="p ${x.con <= 1 ? 'nay' : ''}">${ddmm(x.d)} · ${nhanNgan(x)}</span></div>`).join('');
+  const dau = ds.find(x => !x.chung);
+  $('#leTom').textContent = dau ? `${dau.ten} · ${nhanNgan(dau)}` : '';
+  batHieuUng(loaiHieuUng(h));
+}
+
+/* Hiệu ứng rơi vẽ trên canvas phủ lên widget (không chặn thao tác chuột) */
+const cvLe = $('#leHieuUng'), ctxLe = cvLe.getContext('2d');
+let hatLe = [], loaiHat = '', rafLe = 0, lanVeLe = 0, rongLe = 0, caoLe = 0;
+const MAU_HAT = { hoa: ['#F6C23E', '#F28DB2', '#FFD966', '#F7A8C4'], phao: ['#E8664F', '#F6C23E', '#8CC774', '#6FB6E8', '#F28DB2'], sen: ['#F2A6C0', '#F8C4D6', '#FFFFFF'] };
+const SO_HAT = { tuyet: 70, hoa: 34, phao: 44, sen: 16 };
+function coKichThuoc() {
+  const k = cvLe.parentElement, dpr = window.devicePixelRatio || 1;
+  rongLe = k.clientWidth; caoLe = k.clientHeight;
+  cvLe.width = Math.round(rongLe * dpr); cvLe.height = Math.round(caoLe * dpr);
+  ctxLe.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+function hatMoi(loai, ngauNhien) {
+  const x = Math.random() * rongLe, y = ngauNhien ? Math.random() * caoLe : -10, r = Math.random;
+  const mau = (MAU_HAT[loai] || ['#fff'])[Math.floor(r() * (MAU_HAT[loai] || [1]).length)];
+  if (loai === 'tuyet') return { x, y, r: 1 + r() * 2.6, v: .35 + r() * .9, pha: r() * 6.28, dx: .3 + r() * .6 };
+  if (loai === 'phao') return { x, y, r: 3 + r() * 3, v: 1 + r() * 1.2, pha: r() * 6.28, dx: .5 + r() * .8, goc: r() * 6.28, quay: (r() - .5) * .2, mau };
+  if (loai === 'sen') return { x, y, r: 4 + r() * 2.5, v: .3 + r() * .4, pha: r() * 6.28, dx: .3 + r() * .4, goc: r() * 6.28, quay: (r() - .5) * .04, mau };
+  return { x, y, r: 3 + r() * 3, v: .5 + r() * .7, pha: r() * 6.28, dx: .4 + r() * .6, goc: r() * 6.28, quay: (r() - .5) * .06, mau };   // hoa
+}
+function veHat(t) {
+  rafLe = requestAnimationFrame(veHat);
+  if (t - lanVeLe < 40) return;   // khoảng 25 khung hình/giây cho nhẹ máy
+  lanVeLe = t;
+  ctxLe.clearRect(0, 0, rongLe, caoLe);
+  for (const p of hatLe) {
+    p.y += p.v; p.pha += .02; p.x += Math.sin(p.pha) * p.dx;
+    if (p.goc !== undefined) p.goc += p.quay;
+    if (p.y > caoLe + 10) Object.assign(p, hatMoi(loaiHat, false));
+    if (loaiHat === 'tuyet') { ctxLe.fillStyle = 'rgba(255,255,255,.9)'; ctxLe.beginPath(); ctxLe.arc(p.x, p.y, p.r, 0, 6.283); ctxLe.fill(); continue; }
+    ctxLe.save(); ctxLe.translate(p.x, p.y); ctxLe.rotate(p.goc); ctxLe.fillStyle = p.mau;
+    if (loaiHat === 'phao') ctxLe.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2);
+    else { ctxLe.beginPath(); ctxLe.ellipse(0, 0, p.r, p.r * .55, 0, 0, 6.283); ctxLe.fill(); }
+    ctxLe.restore();
+  }
+}
+function batHieuUng(loai) {
+  if (loai === loaiHat) return;
+  loaiHat = loai; cancelAnimationFrame(rafLe); rafLe = 0;
+  const tat = !loai || cfg.hieuUngLe === false || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  coKichThuoc(); ctxLe.clearRect(0, 0, rongLe, caoLe);
+  if (tat) { hatLe = []; return; }
+  hatLe = Array.from({ length: SO_HAT[loai] }, () => hatMoi(loai, true));
+  rafLe = requestAnimationFrame(veHat);
+}
+window.addEventListener('resize', () => { if (loaiHat) coKichThuoc(); });
+window.thuNgayLe = d => { ngayThu = d; leCache.ngay = ''; loaiHat = '__'; veLe(); };   // thử giao diện: thuNgayLe(new Date(2026, 11, 25))
+veLe(); setInterval(() => { if (leCache.ngay !== khoaNgay(homNayLe())) veLe(); }, 60000);
+
+/* ===== Lịch học, lịch hẹn theo ngày (khác "Nhắc việc" chỉ có giờ trong ngày) ===== */
+const GIO_NHAC_BUOI = { sang: '06:30', chieu: '12:30', toi: '17:30' };   // chưa rõ giờ học thì nhắc vào giờ này của buổi
+const TEN_BUOI = { sang: 'Sáng', chieu: 'Chiều', toi: 'Tối' };
+let lich = doc('w_lich', []);
+/* Giáo viên + SĐT (TKB Khoa Nông nghiệp 06/11/2026). Chưa có SĐT giáo viên thì để trống, bấm ô "SĐT" để nhập, tự lưu. */
+let gv = doc('w_gv', null);
+if (!Array.isArray(gv)) {
+  gv = [
+    { id: 'g1', mon: 'Kiểm nghiệm súc sản', gv: 'Thầy Huỳnh Công Vinh', sdt: '', ghi: '45h · đang học 09–27/11' },
+    { id: 'g2', mon: 'Vi sinh thú y', gv: 'Thầy Trần Võ Hải Đường', sdt: '', ghi: '45h · ghép TY1Q25 · dự kiến học trước Tết' },
+    { id: 'g3', mon: 'Chăn nuôi động vật hoang dã', gv: 'Cô Dư Phương Trang Đài', sdt: '', ghi: '45h · ghép TY1Q25 · dự kiến học trước Tết' },
+    { id: 'g4', mon: 'Pháp luật', gv: 'Cô Hồ Thị Mai Khanh', sdt: '', ghi: '30h · dự kiến học trước Tết' },
+    { id: 'g5', mon: 'Chủ nhiệm lớp (GVCN)', gv: 'Cô Huỳnh Ngọc Tuyết', sdt: '', ghi: '' },
+    { id: 'g6', mon: 'Trưởng Khoa Nông nghiệp', gv: 'Cô Nguyễn Thị Quế Phụng', sdt: '0918351809', ghi: 'Đại diện BCN Khoa' },
+    { id: 'g7', mon: 'Trợ lý Khoa NNTS', gv: 'Cô Vũ Thụy Anh Phụng', sdt: '0949595607', ghi: '' }
+  ];
+  ghi('w_gv', gv);
+}
+const sdtDep = s => String(s || '').replace(/\D/g, '').replace(/^(\d{4})(\d{3})(\d+)$/, '$1 $2 $3');
+lichSan = true;
+// Nạp sẵn lịch môn Kiểm nghiệm súc sản (TKB Khoa Nông nghiệp lập ngày 06/11/2026): 15 buổi chiều × 3 giờ = 45 giờ
+if (doc('w_lichHoc1', 0) < 1) {
+  const ngay = ['2026-11-09','2026-11-10','2026-11-11','2026-11-12','2026-11-13','2026-11-16','2026-11-17','2026-11-18','2026-11-19','2026-11-20','2026-11-23','2026-11-24','2026-11-25','2026-11-26','2026-11-27'];
+  ngay.forEach((n, i) => lich.push({ id: 'kn' + (i + 1), ngay: n, gio: '', buoi: 'chieu', ten: `Kiểm nghiệm súc sản · buổi ${i + 1}/15`, noi: 'Phòng thực hành CNTY, Khu B tầng trệt', ghi: `Thầy Huỳnh Công Vinh · lớp ghép TY1Q24+TY1Q25 · 3 giờ (${3 * (i + 1)}/45)` }));
+  ghi('w_lich', lich); ghi('w_lichHoc1', 1);
+}
+/* Cập nhật theo lớp: học 13:00–16:00; T3/T4 tuần 23–27/11 có kiểm tra; T5, T6 đi thực tế lò mổ lúc 23:00 */
+if (doc('w_lichHoc2', 0) < 1) {
+  lich.forEach(e => {
+    if (!/^kn\d+$/.test(e.id)) return;
+    const i = +e.id.slice(2);
+    e.gio = '13:00'; e.buoi = 'chieu';
+    e.ghi = (e.ghi || '').replace(/^Thầy Huỳnh Công Vinh · /, 'Thầy Huỳnh Công Vinh · 13:00–16:00 · ');
+    if (i === 12 || i === 13) { e.ten = `Kiểm nghiệm súc sản · buổi ${i}/15 · có thể KIỂM TRA`; e.ghi += ' · kiểm tra vào thứ 3 hoặc thứ 4 (chưa chốt ngày)'; }
+    if (i === 14 || i === 15) { e.gio = '23:00'; e.buoi = 'toi'; e.ten = `Thực tế lò mổ súc sản · buổi ${i}/15`; e.noi = 'Lò mổ súc sản (đi lúc 23:00 đêm)'; e.ghi = 'Thầy Huỳnh Công Vinh · đi thực tế xuống lò mổ · 23:00 đêm'; }
+  });
+  ghi('w_lich', lich); ghi('w_lichHoc2', 1);
+}
+const thuNganL = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+const ngayLich = k => new Date(+k.slice(0, 4), +k.slice(5, 7) - 1, +k.slice(8, 10));
+const nhanBuoi = e => e.gio ? e.gio : (TEN_BUOI[e.buoi] || '');
+const xepLich = () => lich.sort((a, b) => (a.ngay + (a.gio || (a.buoi === 'sang' ? '06' : a.buoi === 'chieu' ? '13' : a.buoi === 'toi' ? '18' : '99'))).localeCompare(b.ngay + (b.gio || (b.buoi === 'sang' ? '06' : b.buoi === 'chieu' ? '13' : b.buoi === 'toi' ? '18' : '99'))));
+function veLich() {
+  xepLich();
+  const nay = khoaNgay(), mai = khoaNgay(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1));
+  const sap = lich.filter(e => e.ngay >= nay);
+  $('#lichDs').innerHTML = sap.length ? sap.slice(0, 5).map(e => {
+    const d = ngayLich(e.ngay), hom = e.ngay === nay ? 'nay' : '';
+    return `<div class="don lichHang"><span class="t"><b class="${hom ? 'loi0' : ''}">${e.ngay === nay ? 'Hôm nay' : e.ngay === mai ? 'Ngày mai' : thuNganL[d.getDay()] + ' ' + ddmm(d)}</b> · ${esc(nhanBuoi(e))}<small>${esc(e.ten)}</small></span><span class="p"><button data-lich-xoa="${esc(e.id)}" title="Xóa lịch này" aria-label="Xóa lịch">✕</button></span></div>`;
+  }).join('') + (sap.length > 5 ? `<p class="trong">Còn ${sap.length - 5} lịch nữa.</p>` : '') : '<p class="trong">Không có lịch sắp tới. Thêm bên dưới.</p>';
+  const dau = sap[0];
+  $('#lichTom').textContent = dau ? `${dau.ngay === nay ? 'Hôm nay' : dau.ngay === mai ? 'Mai' : thuNganL[ngayLich(dau.ngay).getDay()] + ' ' + ddmm(ngayLich(dau.ngay))} · ${nhanBuoi(dau)}` : '';
+  // Banner: có lịch hôm nay hoặc ngày mai
+  const bn = $('#lichBanner'), e = sap.find(x => x.ngay === nay) || sap.find(x => x.ngay === mai);
+  if (e) {
+    const g = gv.find(x => x.mon && x.gv && e.ten.startsWith(x.mon)), sdt = g && g.sdt ? ' · 📞 ' + sdtDep(g.sdt) : '';
+    bn.hidden = false; bn.innerHTML = `${btLe('🎓', 28)}<span class="leTx"><b>${e.ngay === nay ? 'Hôm nay' : 'Ngày mai'} · ${esc(nhanBuoi(e))}: ${esc(e.ten)}</b><small>${esc(e.noi || '')}${e.ghi ? (e.noi ? ' · ' : '') + esc(e.ghi) : ''}${esc(sdt)}</small></span>`;
+  }
+  else bn.hidden = true;
+  veViec();   // danh sách Việc cũng lấy lịch hôm nay và 7 ngày tới
+  if (calSan) veCal();
+}
+function themLich() {
+  const ngay = $('#lichNgay').value, gio = $('#lichGio').value, ten = $('#lichTen').value.trim(), tb = $('#lichTb');
+  if (!ngay) { tb.textContent = 'Chọn ngày trước (bấm vào ô ngày).'; return; }
+  if (!ten) { tb.textContent = 'Gõ nội dung lịch rồi bấm +.'; return; }
+  const h = gio ? +gio.slice(0, 2) : -1;
+  lich.push({ id: 'l' + Date.now(), ngay, gio, buoi: h < 0 ? $('#lichBuoi').value : h < 12 ? 'sang' : h < 18 ? 'chieu' : 'toi', ten, noi: '', ghi: '' });
+  tb.textContent = 'Đã lưu lịch ngày ' + ddmm(ngayLich(ngay)) + '.'; setTimeout(() => { if (tb.textContent.startsWith('Đã lưu')) tb.textContent = ''; }, 3500);
+  $('#lichTen').value = ''; $('#lichGio').value = ''; $('#lichBuoi').value = '';
+  ghi('w_lich', lich); veLich();
+}
+$('#lichThem').onclick = themLich;
+$('#lichTen').addEventListener('keydown', e => { if (e.key === 'Enter') themLich(); });
+$('#lichDs').addEventListener('click', e => {
+  const id = e.target.dataset.lichXoa; if (!id) return;
+  const x = lich.find(l => l.id === id);
+  if (x && confirm(`Xóa lịch "${x.ten}" ngày ${ddmm(ngayLich(x.ngay))}?`)) { lich = lich.filter(l => l.id !== id); ghi('w_lich', lich); veLich(); }
+});
+$('#lichNgay').value = khoaNgay();
+function veGv() {
+  const nhomG = g => /đang học/.test(g.ghi) ? 'dang' : /dự kiến/.test(g.ghi) ? 'sap' : 'lh';
+  const hangGv = g => `<div class="don lichHang ${nhomG(g) === 'dang' ? 'gvDang' : ''}"><span class="t"><b>${esc(g.gv || g.mon)}</b><small>${esc(g.mon)}${g.ghi ? ' · ' + esc(g.ghi) : ''}</small></span><span class="p">${g.sdt ? `<a class="sdt" href="tel:${esc(g.sdt.replace(/\D/g, ''))}" data-sdt="${esc(g.sdt.replace(/\D/g, ''))}" title="${coMay ? 'Bấm để chép số' : 'Bấm để gọi'}">📞 ${esc(sdtDep(g.sdt))}</a>` : `<input class="gvSdtMoi" data-gv="${esc(g.id)}" type="tel" inputmode="tel" placeholder="SĐT" aria-label="Nhập SĐT ${esc(g.gv)}" style="width:92px">`}<button data-gv-xoa="${esc(g.id)}" title="Xóa" aria-label="Xóa">✕</button></span></div>`;
+  const NHOM_G = [['sap', 'Sắp học (dự kiến)'], ['dang', 'Đang học (xem ở lịch hằng ngày)'], ['lh', 'Liên hệ']];
+  $('#gvDs').innerHTML = NHOM_G.map(([k, ten]) => { const ds = gv.filter(g => nhomG(g) === k); return ds.length ? `<div class="nhomTd" style="margin-top:6px"><span>${ten}</span><span>${ds.length}</span></div>` + ds.map(hangGv).join('') : ''; }).join('') || '<p class="trong">Chưa có giáo viên nào.</p>';
+  const sapHoc = gv.filter(g => nhomG(g) === 'sap').length;
+  $('#gvTom').textContent = sapHoc ? `${sapHoc} môn sắp học` : '';
+}
+$('#gvDs').addEventListener('click', e => {
+  const a = e.target.closest('a.sdt');
+  if (a && coMay) { e.preventDefault(); const so = sdtDep(a.dataset.sdt), xong = t => { $('#gvTb').textContent = t; setTimeout(() => { $('#gvTb').textContent = ''; }, 4000); };
+    try { navigator.clipboard.writeText(a.dataset.sdt).then(() => xong('Đã chép số ' + so + '.'), () => xong('Số: ' + so)); } catch (_) { xong('Số: ' + so); } return; }
+  const id = e.target.dataset.gvXoa; if (!id) return;
+  const x = gv.find(g => g.id === id);
+  if (x && confirm(`Xóa "${x.gv || x.mon}" khỏi danh sách?`)) { gv = gv.filter(g => g.id !== id); ghi('w_gv', gv); veGv(); veLich(); }
+});
+$('#gvDs').addEventListener('change', e => {
+  const id = e.target.dataset.gv; if (!id) return;
+  const x = gv.find(g => g.id === id), so = e.target.value.replace(/\D/g, '');
+  if (x && so.length >= 8) { x.sdt = so; ghi('w_gv', gv); veGv(); veLich(); }
+});
+function themGv() {
+  const mon = $('#gvMon').value.trim(), ten = $('#gvTen').value.trim(), sdt = $('#gvSdt').value.replace(/\D/g, '');
+  if (!mon && !ten) { $('#gvTb').textContent = 'Gõ tên môn hoặc tên giáo viên.'; return; }
+  gv.push({ id: 'g' + Date.now(), mon: mon || 'Giáo viên', gv: ten, sdt, ghi: '' });
+  ghi('w_gv', gv); $('#gvMon').value = $('#gvTen').value = $('#gvSdt').value = ''; $('#gvTb').textContent = ''; veGv(); veLich();
+}
+$('#gvThem').onclick = themGv;
+$('#gvSdt').addEventListener('keydown', e => { if (e.key === 'Enter') themGv(); });
+veGv();
+/* Nhắc lịch: có giờ học thì nhắc trước 45 phút, chỉ có buổi thì nhắc vào giờ mặc định của buổi; tối hôm trước (20h) nhắc "mai có lịch" */
+function nhacLich() {
+  const d = new Date(), nay = khoaNgay(d), phut = d.getHours() * 60 + d.getMinutes();
+  const mai = khoaNgay(new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1));
+  let doi = false;
+  for (const e of lich) {
+    if (e.ngay === nay && e.daBao !== nay) {
+      const [h, m] = (e.gio || GIO_NHAC_BUOI[e.buoi] || '07:00').split(':').map(Number);
+      const moc = h * 60 + m - (e.gio ? 45 : 0);
+      if (phut >= moc) {
+        e.daBao = nay; doi = true;
+        if (phut < moc + 240) bao(`${e.gio ? 'Hôm nay ' + e.gio : TEN_BUOI[e.buoi] ? TEN_BUOI[e.buoi] + ' nay' : 'Hôm nay'}: ${e.ten}`, [e.noi, e.ghi].filter(Boolean).join('\n'));   // quá giờ lâu thì thôi, không báo muộn
+      }
+    }
+    if (e.ngay === mai && e.baoTruoc !== mai && phut >= 20 * 60) { e.baoTruoc = mai; doi = true; bao(`Mai có lịch: ${e.ten}`, [nhanBuoi(e), e.noi].filter(Boolean).join(' · ')); }
+  }
+  if (doi) ghi('w_lich', lich);
+  veLich();
+}
+veLich(); setTimeout(nhacLich, 5000);
+
+/* ===== Lịch tuần, tháng: xem trước nhiều ngày (âm lịch, lễ, lịch học, nợ đến hạn). Bấm vào ngày ở đầu widget để mở ===== */
+var calSan = false;   // var để veLich/veNo gọi được dù khối này chạy sau
+let calChe = doc('w_calChe', 'thang'), calNeo = new Date(), calChon = khoaNgay(new Date());
+const congNgay = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+const thuHai0 = d => (d.getDay() + 6) % 7;   // thứ Hai = 0 (tuần bắt đầu từ thứ Hai)
+const THU_DAY = ['Chủ nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+function thongTinNgay(d) {
+  const a = AL(d.getDate(), d.getMonth() + 1, d.getFullYear()), m = congNgay(d, 1), aMai = AL(m.getDate(), m.getMonth() + 1, m.getFullYear()), k = khoaNgay(d);
+  return { d, k, a, le: leCuaNgay(d, a, aMai), lich: lich.filter(e => e.ngay === k), viec: viec.filter(v => v.ngay === k || (!v.ngay && v.xong && v.ngayXong === k)), no: no.filter(n => n.han === k) };
+}
+const nhanAl = a => a.ngay === 1 ? `${a.ngay}/${a.thang}${a.nhuan ? 'n' : ''}` : String(a.ngay);
+function veCal() {
+  const hom = khoaNgay(new Date());
+  if (calChe === 'ngay') {
+    // Xem nhanh một ngày: không vẽ lưới, chỉ chi tiết ngày + ô thêm
+    const d0 = ngayLich(calChon), t = `${THU_DAY[d0.getDay()]}, ${ddmm(d0)}/${d0.getFullYear()}`;
+    $('#calTd').textContent = t + (calChon === hom ? ' (hôm nay)' : ''); $('#calTom').textContent = t;
+    document.querySelectorAll('[data-cal=ngay],[data-cal=thang],[data-cal=tuan]').forEach(b => b.setAttribute('aria-pressed', b.dataset.cal === calChe));
+    $('#calLuoi').innerHTML = ''; veCalCt(); return;
+  }
+  let dau, soO, tieuDe;
+  if (calChe === 'thang') {
+    const dau1 = new Date(calNeo.getFullYear(), calNeo.getMonth(), 1), cuoi = new Date(calNeo.getFullYear(), calNeo.getMonth() + 1, 0);
+    dau = congNgay(dau1, -thuHai0(dau1)); soO = Math.ceil((thuHai0(dau1) + cuoi.getDate()) / 7) * 7;
+    tieuDe = `Tháng ${calNeo.getMonth() + 1}/${calNeo.getFullYear()}`;
+  } else {
+    dau = congNgay(calNeo, -thuHai0(calNeo)); soO = 7;
+    const cuoi = congNgay(dau, 6);
+    tieuDe = `Tuần ${ddmm(dau)} – ${ddmm(cuoi)}/${cuoi.getFullYear()}`;
+  }
+  $('#calTd').textContent = tieuDe;
+  $('#calTom').textContent = calChe === 'thang' ? `Tháng ${calNeo.getMonth() + 1}/${calNeo.getFullYear()}` : tieuDe;
+  document.querySelectorAll('[data-cal=ngay],[data-cal=thang],[data-cal=tuan]').forEach(b => b.setAttribute('aria-pressed', b.dataset.cal === calChe));
+  let html = '';
+  if (calChe === 'thang') {
+    html = '<div class="calLuoi">' + ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].map(t => `<span class="calT">${t}</span>`).join('');
+    for (let i = 0; i < soO; i++) {
+      const o = thongTinNgay(congNgay(dau, i)), d = o.d;
+      // Mỗi mục một chấm: lễ (vàng), mùng một/rằm (hồng), lịch (xanh dương), việc (xanh lá, mờ khi đã xong), nợ (đỏ). Quá 8 mục thì hiện 7 chấm và dấu +
+      const cham = [...o.le.filter(e => !e.chung).map(() => 'le'), ...(o.le.some(e => e.chay || e.chung) ? ['chay'] : []), ...o.lich.map(e => e.xong ? 'hoc xong' : 'hoc'), ...o.viec.map(v => v.xong ? 'viec xong' : 'viec'), ...o.no.map(() => 'no')];
+      const hienCham = cham.slice(0, cham.length > 8 ? 7 : 8);
+      html += `<button class="calO ${d.getMonth() !== calNeo.getMonth() ? 'mo' : ''} ${o.k === hom ? 'nay' : ''} ${o.k === calChon ? 'chon' : ''} ${d.getDay() === 0 ? 'cn' : ''}" data-ng="${o.k}" aria-label="${THU_DAY[d.getDay()]} ${ddmm(d)}"><b>${d.getDate()}</b><small>${nhanAl(o.a)}</small><span class="dotNgay">${hienCham.map(x => `<i class="${x}"></i>`).join('')}${cham.length > 8 ? '<em>+</em>' : ''}</span></button>`;
+    }
+    html += '</div><div class="calChuThich"><span style="width:100%">Mỗi chấm là một mục trong ngày.</span><span><i class="le"></i>Lễ</span><span><i class="chay"></i>Mùng một, rằm</span><span><i class="hoc"></i>Lịch học, hẹn</span><span><i class="viec"></i>Việc (mờ = đã xong)</span><span><i class="no"></i>Nợ đến hạn</span></div>';
+  } else {
+    for (let i = 0; i < 7; i++) {
+      const o = thongTinNgay(congNgay(dau, i)), d = o.d;
+      const tag = [...o.le.map(e => `<b>${esc(e.ten)}</b>${e.chay ? ' · ăn chay' : ''}`), ...o.lich.map(e => `${esc(nhanBuoi(e))}: ${esc(e.ten)}`), ...o.viec.map(v => `${v.xong ? '✓ ' : ''}${esc(nhanViec(v) || 'Việc')}: ${esc(v.nd)}`), ...o.no.map(n => `Nợ đến hạn: ${esc(n.ten)}`)];
+      html += `<button class="calTuan ${o.k === hom ? 'nay' : ''} ${o.k === calChon ? 'chon' : ''}" data-ng="${o.k}"><span><b>${thuNganL[d.getDay()]} ${ddmm(d)}</b><small>âm ${o.a.ngay}/${o.a.thang}</small></span><span class="tg">${tag.length ? tag.map(t => `<div>${t}</div>`).join('') : '<span class="trong">–</span>'}</span></button>`;
+    }
+  }
+  $('#calLuoi').innerHTML = html;
+  veCalCt();
+}
+function veCalCt() {
+  // Chi tiết ngày đang chọn
+  const o = thongTinNgay(ngayLich(calChon)), d = o.d;
+  $('#calCt').innerHTML = `<h3>${THU_DAY[d.getDay()]}, ${ddmm(d)}/${d.getFullYear()}</h3><p>Âm lịch ${o.a.ngay}/${o.a.thang}${o.a.nhuan ? ' nhuận' : ''} · tháng ${o.a.canChiThang} năm ${o.a.canChiNam}, ngày ${o.a.canChiNgay}</p>` +
+    o.le.map(e => `<p>${btLe(e.bt, 18)} ${esc(e.ten)}${e.chay ? ' · ngày ăn chay' : ''}</p>`).join('') +
+    // Mỗi dòng có nút ✕ để xóa ngay tại đây (kể cả ngày đã qua), việc có thêm ô tick xong
+    o.lich.map(e => `<p class="hangCt">🎓 <span class="ndCt">${esc(nhanBuoi(e))}: ${esc(e.ten)}${e.noi ? '<br><small>' + esc(e.noi) + '</small>' : ''}</span><button class="xoaCt" data-cal="xoaLich" data-id="${esc(e.id)}" title="Xóa lịch này" aria-label="Xóa lịch này">✕</button></p>`).join('') +
+    o.viec.map(v => `<p class="hangCt ${v.xong ? 'xongV' : ''}"><button class="tickCt" data-cal="tickViec" data-id="${v.id}" title="${v.xong ? 'Bỏ đánh dấu xong' : 'Đánh dấu đã xong'}" aria-label="Đánh dấu xong">${v.xong ? '☑' : '☐'}</button><span class="ndCt">${esc(nhanViec(v) || 'Việc')}: ${esc(v.nd)}${v.xong ? ' · đã xong' : ''}</span><button class="xoaCt" data-cal="xoaViec" data-id="${v.id}" title="Xóa việc này" aria-label="Xóa việc này">✕</button></p>`).join('') +
+    o.no.map(n => `<p>💰 Nợ đến hạn: ${esc(n.ten)} · ${so(n.tien)}đ</p>`).join('') +
+    (!o.le.length && !o.lich.length && !o.viec.length && !o.no.length ? '<p class="trong">Không có lễ hay lịch trong ngày này.</p>' : '');
+  $('#calThemTd').textContent = `Thêm vào ${THU_DAY[d.getDay()]} ${ddmm(d)}`;
+}
+$('[data-k=cal]').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const c = b.dataset.cal, ng = b.dataset.ng;
+  if (ng) {
+    // Chọn ngày xong thì cuộn xuống phần chi tiết và ô thêm; trên máy tính đưa con trỏ vào ô nội dung để gõ luôn (điện thoại thì không, tránh bàn phím tự bật)
+    calChon = ng; veCal();
+    $('#calThem').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    if (coMay) $('#calTen').focus({ preventScroll: true });
+    return;
+  }
+  if (c === 'thang' || c === 'tuan' || c === 'ngay') { calChe = c; ghi('w_calChe', c); calNeo = ngayLich(calChon); veCal(); }
+  else if (c === 'truoc' || c === 'sau') {
+    const h = c === 'sau' ? 1 : -1;
+    if (calChe === 'ngay') { const d = congNgay(ngayLich(calChon), h); calChon = khoaNgay(d); calNeo = d; veCal(); return; }
+    calNeo = calChe === 'thang' ? new Date(calNeo.getFullYear(), calNeo.getMonth() + h, 1) : congNgay(calNeo, 7 * h);
+    const homNay = new Date();
+    calChon = khoaNgay(calChe === 'thang' ? (calNeo.getMonth() === homNay.getMonth() && calNeo.getFullYear() === homNay.getFullYear() ? homNay : calNeo) : congNgay(calNeo, -thuHai0(calNeo)));
+    veCal();
+  } else if (c === 'nay') { calNeo = new Date(); calChon = khoaNgay(calNeo); veCal(); }
+  else if (c === 'xoaLich' || c === 'xoaViec' || c === 'tickViec') {
+    const id = b.dataset.id;
+    if (c === 'xoaLich') {
+      const x = lich.find(l => l.id === id);
+      if (x && confirm(`Xóa lịch "${x.ten}" ngày ${ddmm(ngayLich(x.ngay))}?`)) { lich = lich.filter(l => l.id !== id); ghi('w_lich', lich); veLich(); }
+    } else {
+      const v = viec.find(x => String(x.id) === id);
+      if (!v) return;
+      if (c === 'tickViec') { v.xong = !v.xong; v.ngayXong = v.xong ? khoaNgay() : undefined; ghi('w_viec', viec); veViec(); }
+      else if (confirm(`Xóa việc "${v.nd}"?`)) { viec = viec.filter(x => String(x.id) !== id); ghi('w_viec', viec); veViec(); }
+    }
+    veCal();
+  }
+  else if (c === 'addViec' || c === 'addLich') {
+    // Thêm thẳng vào ngày đang chọn, không phải nhảy sang mục khác
+    const ten = $('#calTen').value.trim(), tb = $('#calTb'), gio = $('#calGio').value, h = gio ? +gio.slice(0, 2) : -1;
+    if (!ten) { tb.textContent = 'Gõ nội dung rồi bấm + Việc hoặc + Lịch.'; $('#calTen').focus(); return; }
+    const buoi = h < 0 ? $('#calBuoi').value : h < 12 ? 'sang' : h < 18 ? 'chieu' : 'toi';
+    if (c === 'addViec') { viec.push({ id: Date.now(), nd: ten, gio, buoi, ngay: calChon, xong: false, daBao: '', lap: false }); ghi('w_viec', viec); veViec(); }
+    else { lich.push({ id: 'l' + Date.now(), ngay: calChon, gio, buoi, ten, noi: '', ghi: '' }); ghi('w_lich', lich); veLich(); }
+    tb.textContent = `Đã thêm ${c === 'addViec' ? 'việc' : 'lịch'} vào ngày ${ddmm(ngayLich(calChon))}.`;
+    setTimeout(() => { if (tb.textContent.startsWith('Đã thêm')) tb.textContent = ''; }, 3500);
+    $('#calTen').value = ''; $('#calGio').value = ''; $('#calBuoi').value = ''; veCal();
+  }
+});
+// Gõ xong bấm Enter là thêm luôn (mặc định thêm thành Việc; muốn thêm thành Lịch thì bấm nút + Lịch)
+$('#calTen').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); document.querySelector('[data-cal=addViec]').click(); } });
+// Bấm vào dòng ngày tháng ở đầu widget thì mở lịch
+$('#ngay').title = 'Bấm để xem lịch tuần, tháng';
+$('#ngay').addEventListener('click', () => { chonTab('lich'); calNeo = new Date(); calChon = khoaNgay(calNeo); dong.cal = false; apMuc.cal(); veCal(); $('[data-k=cal]').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
+veCal(); calSan = true; veViec();   // vẽ lại danh sách Việc khi các hàm lịch đã sẵn sàng
+
+/* ===== Chương trình đào tạo Cao đẳng Thú y 2024–2027: bạn tick môn mình học ===== */
+const MON = [
+  ['MH01','Giáo dục chính trị',5,75,'I'],['MH02','Pháp luật',2,30,'I'],['MH03','Giáo dục thể chất',2,60,'I'],['MH04','Giáo dục quốc phòng - An ninh',3,75,'I'],['MH05','Tin học',3,75,'I'],['MH06','Ngoại ngữ (Anh văn)',4,120,'I, II'],
+  ['MH07','Giải phẫu sinh lý vật nuôi',3,75,'I'],['MĐ30','Kỹ năng phát triển năng lực bản thân',2,45,'I'],
+  ['MH08','Dược lý thú y',3,75,'II'],['MH09','Dinh dưỡng và thức ăn chăn nuôi',2,45,'II'],['MH10','An toàn lao động nghề nghiệp',2,45,'II'],['MĐ13','Chăn nuôi heo',3,75,'II'],['MĐ31','Kỹ năng định hướng nghề nghiệp',2,45,'II'],
+  ['MH11','Chẩn đoán và điều trị học',3,75,'III'],['MĐ14','Chăn nuôi trâu, bò',3,75,'III'],['MĐ15','Chăn nuôi gà, vịt',3,75,'III'],['MĐ16','Chăn nuôi chó mèo',3,75,'III'],['MĐ17','Chăn nuôi động vật hoang dã',2,45,'III'],['MH32','Kỹ năng hỗ trợ nghề nghiệp',2,45,'III'],
+  ['MĐ18','Chăn nuôi dê thỏ',3,75,'IV'],['MĐ19','Điều trị bệnh trên heo',3,75,'IV'],['MĐ20','Điều trị bệnh trên trâu, bò',3,75,'IV'],['MĐ21','Điều trị bệnh trên gà, vịt',3,75,'IV'],['MĐ22','Điều trị bệnh trên chó, mèo',3,75,'IV'],
+  ['MH33','Kỹ năng phát triển năng lực nghề nghiệp',2,45,'IV'],['MĐ34','Năng lực số',2,45,'IV'],['MĐ35','Chăn nuôi chim cút',2,45,'IV'],['MĐ36','Gieo tinh nhân tạo',2,45,'IV'],
+  ['MH12','Vi sinh thú y',3,45,'V'],['MĐ23','Kiểm nghiệm súc sản',2,45,'V'],['MH24','Anh văn chuyên ngành',3,45,'V'],['MH25','Phương pháp thí nghiệm',3,45,'V'],['MH26','Luật thú y',3,45,'V'],['MĐ27','Quản lý và phòng chống dịch bệnh trong chăn nuôi',4,60,'V'],['MĐ28','Khuyến nông',3,45,'V'],
+  ['MĐ29','Thực tập nghề nghiệp',10,450,'VI']
+];
+let monChon = doc('w_mon', null), monLoc = doc('w_monLoc', 'tat');
+if (!monChon || typeof monChon !== 'object') { monChon = { 'MĐ23': 1 }; ghi('w_mon', monChon); }   // chỉ Kiểm nghiệm súc sản đang học; tick = đã học hoặc đang học
+if (!doc('w_monV2', 0)) {   // bản trước tick sẵn cả 3 môn "dự kiến"; nếu bạn chưa đổi gì thì bỏ 3 môn đó đi
+  const ks = Object.keys(monChon).sort().join();
+  if (ks === ['MH02', 'MH12', 'MĐ17', 'MĐ23'].sort().join()) { monChon = { 'MĐ23': 1 }; ghi('w_mon', monChon); }
+  ghi('w_monV2', 1);
+}
+function veMon() {
+  const hangMon = m => `<label class="viec"><input type="checkbox" data-mon="${esc(m[0])}" ${monChon[m[0]] ? 'checked' : ''}><span class="t">${esc(m[1])}<small style="display:block;color:var(--mo);font-size:11px">HK ${esc(m[4])} · ${esc(m[0])} · ${m[2]} TC · ${m[3]} giờ</small></span></label>`;
+  const da = MON.filter(m => monChon[m[0]]), chua = MON.filter(m => !monChon[m[0]]);
+  const tcDa = da.reduce((s, m) => s + m[2], 0), gioDa = da.reduce((s, m) => s + m[3], 0);
+  const tongTc = MON.reduce((s, m) => s + m[2], 0), tongGio = MON.reduce((s, m) => s + m[3], 0), pt = Math.round(tcDa / tongTc * 100);
+  $('#monBang').innerHTML = `<div class="monTienDo"><div style="display:flex;justify-content:space-between;font-size:12px"><span>${tcDa}/${tongTc} tín chỉ · ${gioDa}/${tongGio} giờ</span><b>${pt}%</b></div><div class="monThanh"><i style="width:${pt}%"></i></div></div>`;
+  $('#monDs').innerHTML = `<div class="monHop"><div class="monHopTd"><b>✅ Đã học</b><span>${da.length} môn · ${tcDa} TC</span></div><div class="monHopDs">${da.map(hangMon).join('') || '<p class="trong">Chưa có môn nào. Tick ở hộp bên dưới.</p>'}</div></div>
+    <div class="monHop"><div class="monHopTd"><b>⏳ Chưa học</b><span>${chua.length} môn · ${tongTc - tcDa} TC</span></div><div class="monHopDs">${chua.map(hangMon).join('') || '<p class="trong">Bạn đã học hết mọi môn. 🎉</p>'}</div></div>`;
+  $('#monTom').textContent = `đã ${da.length} · chưa ${chua.length}`;
+}
+$('#monDs').addEventListener('change', e => { const c = e.target.dataset.mon; if (!c) return; if (e.target.checked) monChon[c] = 1; else delete monChon[c]; ghi('w_mon', monChon); veMon(); });
+veMon();
+
+/* Thanh tab: chia các mục thành 4 nhóm cho đỡ phải kéo dài. Nhớ tab đang xem; chấm đỏ báo có việc cần chú ý trong tab */
+const TAB = ['lich', 'ban', 'viec', 'may', 'tien'];
+let tabHien = doc('w_tab', 'ban');
+if (!TAB.includes(tabHien) || (!coMay && tabHien === 'may')) tabHien = 'ban';
+function chonTab(t) {
+  tabHien = t; ghi('w_tab', t);
+  const c = document.querySelector('.cuon'); c.dataset.tab = t;
+  document.querySelectorAll('.tabs [data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === t));
+  const dauTab = document.querySelector('.tabs').offsetTop; if (c.scrollTop > dauTab) c.scrollTop = dauTab;   // tab mới bắt đầu ngay dưới thanh tab
+}
+document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) chonTab(b.dataset.tab); });
+function capNhatTab() {
+  const nay = khoaNgay(), dat = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = n > 0 ? n : ''; };
+  dat('soLich', lich.filter(e => e.ngay === nay).length);
+  dat('soBan', (chuaNhapGia() ? 1 : 0) + no.filter(n => n.han && n.han < nay).length);
+  dat('soViec', viec.filter(v => !v.xong && quaGio(v)).length);
+}
+chonTab(tabHien); capNhatTab(); setInterval(capNhatTab, 5000);
+
+
+/* Thu gọn / mở từng mục (nhớ trạng thái). Thời tiết mặc định ẩn, chỉ mở tạm vài phút */
+const dong = { troi: true, cal: true, le: true, xe: true, ghichu: true, khach: true, tinh: true, tatmay: true, may: true, ...doc('w_dong', {}) };
+dong.troi = true;
+if (!doc('w_tinhTab', 0)) { dong.tinh = false; ghi('w_dong', dong); ghi('w_tinhTab', 1); }   // Tính nhanh chuyển sang tab Tiện ích: mở sẵn một lần
+const apMuc = {};
+let henTroi;
+document.querySelectorAll('section[data-k]').forEach(s => {
+  const k = s.dataset.k, nut = s.querySelector('.tt');
+  apMuc[k] = () => { s.classList.toggle('dong', !!dong[k]); nut.setAttribute('aria-expanded', !dong[k]); };
+  nut.onclick = () => { if (k === 'troi') clearTimeout(henTroi); dong[k] = !dong[k]; ghi('w_dong', dong); apMuc[k](); };
+  apMuc[k]();
+});
+function hienTroiTam(phut = 3, doiTab = false) {
+  if (doiTab) chonTab('lich');   // lần mở đầu ngày và bản tóm tắt buổi sáng: chuyển sang tab Lịch để thấy thời tiết; cảnh báo mưa thì không giành tab
+  dong.troi = false; apMuc.troi();
+  clearTimeout(henTroi);
+  henTroi = setTimeout(() => { dong.troi = true; apMuc.troi(); }, phut * 60000);
+}
+if (tb.troiHien !== khoaNgay()) { datTB('troiHien', khoaNgay()); hienTroiTam(3, true); }   // lần mở đầu tiên trong ngày
+
+/* Hẹn giờ tắt máy (lệnh shutdown của Windows nằm trong main.js). Báo trước 5 phút và 1 phút, không phụ thuộc cài đặt thông báo */
+let tatAt = null, tatBao5 = false, tatBao1 = false, cheDo = 'tat';
+const tatMay = coMay ? window.may.tatMay : null;
+const loiTat = m => { m = String(m).slice(0, 40); $('#tatTb').textContent = m; setTimeout(() => { if (!tatAt && $('#tatTb').textContent === m) $('#tatTb').textContent = ''; }, 6000); };
+function veTat() {
+  $('#tatHen').hidden = !tatAt; $('#tatChon').hidden = !!tatAt || cheDo !== 'tat'; $('#nguChon').hidden = cheDo !== 'ngu';
+  if (!tatAt) return;
+  const con = Math.round((tatAt - Date.now()) / 1000);
+  if (con <= 0) { tatAt = null; $('#tatTb').textContent = ''; veTat(); return; }
+  $('#tatDem').textContent = `${hai(Math.floor(con / 3600))}:${hai(Math.floor(con % 3600 / 60))}:${hai(con % 60)}`;
+  const t = new Date(tatAt), homNay = t.toDateString() === new Date().toDateString();
+  $('#tatLuc').textContent = `Tắt lúc ${gioPhut(t)}${homNay ? '' : ' ngày mai'}`;
+  $('#tatTb').textContent = '⏻ ' + gioPhut(t);
+  if (con <= 300 && !tatBao5) { tatBao5 = true; thongBao('Sắp tắt máy', { body: 'Còn 5 phút nữa máy sẽ tắt. Hãy lưu công việc.' }); }
+  if (con <= 60 && !tatBao1) { tatBao1 = true; thongBao('Sắp tắt máy', { body: 'Còn 1 phút nữa máy sẽ tắt!' }); }
+}
+async function henTat(giay) {
+  if (!tatMay) { loiTat('Chạy bằng chay.bat'); return; }
+  const r = await tatMay.dat(giay);
+  if (r.loi) { loiTat(r.loi); return; }
+  tatAt = r.at; tatBao5 = tatBao1 = false;
+  dong.tatmay = false; apMuc.tatmay(); veTat();
+}
+document.querySelectorAll('[data-tat]').forEach(b => b.onclick = () => henTat(+b.dataset.tat * 60));
+$('#tatHenGio').onclick = () => {
+  const v = $('#tatGio').value; if (!v) return;
+  const [h, m] = v.split(':').map(Number), t = new Date();
+  t.setHours(h, m, 0, 0);
+  if (t - Date.now() < 60000) t.setDate(t.getDate() + 1);   // giờ đã qua (hoặc sát giờ) thì hiểu là ngày mai
+  henTat(Math.ceil((t - Date.now()) / 1000));
+};
+$('#tatThem').onclick = () => henTat(Math.round((tatAt - Date.now()) / 1000) + 900);
+$('#tatHuy').onclick = async () => { await tatMay.huy(); tatAt = null; $('#tatTb').textContent = ''; veTat(); };
+
+/* Ngủ đông + tự bật lại (Task Scheduler của Windows, logic trong lichmay.js) */
+const lichMay = coMay ? window.may.lichMay : null;
+const gioLich = ms => { const t = new Date(ms); return (t.toDateString() === new Date().toDateString() ? '' : hai(t.getDate()) + '/' + hai(t.getMonth() + 1) + ' ') + gioPhut(t); };
+async function taiNgu() {
+  const el = $('#nguTt');
+  if (!lichMay) { el.textContent = 'Chạy bằng chay.bat để dùng mục này.'; return; }
+  let x, kt; try { [x, kt] = await Promise.all([lichMay.xem(), lichMay.kt()]); } catch { return; }
+  const muc = [x.co
+    ? `Đang hẹn: ${x.ngu ? 'ngủ đông ' + gioLich(x.ngu) + ', ' : ''}bật lại ${gioLich(x.bat)}${x.moi ? ' (mỗi ngày)' : ''}${x.giu ? ', giữ thức ' + x.giu + ' phút' : ''} <button id="nguHuy" class="nho bat">Hủy lịch</button>`
+    : 'Chưa có lịch nào.'];
+  if (kt.ngudong === false) muc.push('<span class="loi">Máy chưa bật ngủ đông. Mở PowerShell bằng quyền quản trị, gõ: powercfg /hibernate on</span>');
+  if (kt.wake === false) muc.push('<span class="loi">Windows đang chặn hẹn giờ đánh thức máy nên máy sẽ không tự bật được.</span> <button id="nguChoPhep" class="nho bat">Cho phép</button>');
+  el.innerHTML = muc.map(m => `<p style="margin-top:6px">${m}</p>`).join('');
+}
+$('#nguHen').onclick = async () => {
+  const bat = $('#batGio').value;
+  if (!bat) { loiTat('Nhập giờ tự bật lại'); return; }
+  const r = await lichMay.dat({ ngu: $('#nguGio').value, bat, moi: $('#nguMoi').checked, giu: +$('#giuPhut').value });
+  if (r.loi) loiTat(r.loi);
+  taiNgu();
+};
+$('#nguNgay').onclick = async () => {
+  const bat = $('#batGio').value;
+  if (!bat) { loiTat('Nhập giờ tự bật lại'); return; }
+  if (!confirm(`Ngủ đông máy ngay bây giờ và tự bật lại lúc ${bat}? Hãy lưu công việc trước.`)) return;
+  const r = await lichMay.nguNgay(bat, +$('#giuPhut').value);
+  loiTat(r.loi || 'Máy sắp ngủ đông…');
+  taiNgu();
+};
+$('#nguTt').addEventListener('click', async e => {
+  if (e.target.id === 'nguHuy') { await lichMay.huy(); taiNgu(); }
+  else if (e.target.id === 'nguChoPhep' && confirm('Bật cho phép hẹn giờ đánh thức máy trong cài đặt nguồn (Power Options) của Windows?')) {
+    const r = await lichMay.choPhep(); if (r.loi) loiTat(r.loi); taiNgu();
+  }
+});
+document.querySelectorAll('[data-che]').forEach(b => b.onclick = () => {
+  cheDo = b.dataset.che;
+  document.querySelectorAll('[data-che]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  veTat(); if (cheDo === 'ngu') taiNgu();
+});
+setInterval(() => { if (cheDo === 'ngu' && !$('section[data-k=tatmay]').classList.contains('dong')) taiNgu(); }, 30000);
+if (tatMay) tatMay.xem().then(r => { tatAt = r.at; tatBao5 = tatBao1 = false; if (tatAt) { dong.tatmay = false; apMuc.tatmay(); } veTat(); });
+setInterval(veTat, 1000);
+
+/* Tự động: tóm tắt đầu ngày, nhắc nhập giá, nhắc nợ đến hạn */
+function tomTat() {
+  const d = new Date(), nay = khoaNgay(d), muc = [];
+  const al = AL(d.getDate(), d.getMonth() + 1, d.getFullYear());
+  const mai = new Date(d); mai.setDate(d.getDate() + 1);
+  const alMai = AL(mai.getDate(), mai.getMonth() + 1, mai.getFullYear());
+  const ten = n => n === 1 ? 'mùng một' : n === 15 ? 'rằm' : '';
+  if (ten(al.ngay)) muc.push(`Hôm nay ${ten(al.ngay)}`); else if (ten(alMai.ngay)) muc.push(`Mai ${ten(alMai.ngay)}`);
+  (leCache.ds || []).filter(x => !x.chung && x.con <= 1).forEach(x => muc.push(`${x.con === 0 ? 'Hôm nay' : 'Mai'}: ${x.ten}`));
+  lich.filter(e => e.ngay === nay).forEach(e => muc.push(`Lịch hôm nay: ${nhanBuoi(e)} ${e.ten}`));
+  if (donCache) muc.push(`Đơn: ${donCache.chuaXong} chưa xong${donCache.ton ? `, ${donCache.ton} tồn quá 1 ngày` : ''}`);
+  const v = viec.filter(x => !x.xong && denHan(x));
+  if (v.length) muc.push(`Việc hôm nay: ${v.length} (${v.slice(0, 3).map(x => x.nd).join('; ')})`);
+  const nd = no.filter(n => n.han && n.han <= nay);
+  if (nd.length) muc.push(`Nợ đến hạn: ${nd.length} khoản, ${so(nd.reduce((s, n) => s + n.tien, 0))}đ`);
+  if (troiTin) muc.push(troiTin.dau >= 0 ? `Dự báo mưa khoảng ${troiTin.gioMua}h` : `Mưa hôm nay ${troiTin.homNay}%, 12 giờ tới ổn`);
+  const gh = gia.filter(g => g.ten && g.gia).slice(0, 3).map(g => `${g.ten} ${hienGia(g.gia)}`);
+  if (gh.length) muc.push('Giá gần nhất: ' + gh.join(', '));
+  bao('Chào buổi sáng', muc.join('\n') || 'Chúc bạn một ngày buôn may bán đắt!');
+  hienTroiTam(3, true);
+}
+function tuDong() {
+  veNhacGia(); nhacLich();
+  if (cfg.tb === false) return;
+  const d = new Date(), nay = khoaNgay(d), phut = d.getHours() * 60 + d.getMinutes();
+  const [bh, bm] = String(cfg.gioBrief || '07:00').split(':').map(Number);
+  if (tb.brief !== nay && phut >= bh * 60 + bm && troiXong && (donXong || !cfg.fb)) {
+    datTB('brief', nay);
+    if (d.getHours() < 12) tomTat();   // mở máy sau trưa thì bỏ qua, tránh báo "chào buổi sáng" lúc chiều
+  }
+  if (phut >= 9 * 60 && tb.gia !== nay && chuaNhapGia()) {
+    datTB('gia', nay); bao('Nhập giá hôm nay', 'Chưa cập nhật giá lúa, gạo, cám. Mở widget để nhập.');
+  }
+  const den = no.filter(n => n.han && n.han <= nay);
+  if (phut >= 9 * 60 && tb.no !== nay && den.length) {
+    datTB('no', nay); bao('Công nợ đến hạn', den.slice(0, 4).map(n => `${n.ten}: ${so(n.tien)}đ`).join('\n'));
+  }
+}
+setInterval(tuDong, 30000); setTimeout(tuDong, 8000);
+
+/* Nút trên cùng + cài đặt */
+// ✕ chỉ ẩn widget (vẫn chạy ngầm, nhắc việc vẫn báo); muốn tắt hẳn dùng menu chuột phải ở biểu tượng khay hệ thống
+$('#nutThoat').addEventListener('click', () => { if (coMay) window.may.an(); else window.close(); });
+// Làm mới = nạp lại cả giao diện (lấy bản sửa mới nhất, tự khởi động lại nếu phần lõi đã đổi) và tải lại mọi dữ liệu
+const lamMoi = () => coMay ? window.may.lamMoi() : location.reload();
+$('#nutLam').onclick = lamMoi;
+document.addEventListener('keydown', e => { if (e.key === 'F5') { e.preventDefault(); lamMoi(); } });
+$('#nutDon').onclick = taiDon;
+$('#nutCai').onclick = e => {
+  const c = $('#cai'); c.hidden = !c.hidden;
+  e.currentTarget.setAttribute('aria-pressed', !c.hidden);
+  if (!c.hidden) c.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+};
+$('#chonNoi').innerHTML = NOI.map(n => `<option>${esc(n.ten)}</option>`).join('');
+$('#chonNoi').value = viTriNoi().ten;
+$('#chonNoi').onchange = e => { cfg.noi = e.target.value; luuCfg(); taiThoiTiet(); };
+$('#fbUrl').value = cfg.fb; $('#fbNhanh').value = cfg.nhanh;
+const doiFb = () => { cfg.fb = $('#fbUrl').value.trim(); cfg.nhanh = $('#fbNhanh').value.trim() || 'orders'; luuCfg(); ghi('w_donThay', null); taiDon(); };
+$('#fbUrl').onchange = doiFb; $('#fbNhanh').onchange = doiFb;
+
+let tkd = doc('w_tkd', true);
+$('#cbTKD').checked = tkd;
+if (coMay) window.may.tuKhoiDong(tkd);
+$('#cbTKD').onchange = e => { tkd = e.target.checked; ghi('w_tkd', tkd); coMay && window.may.tuKhoiDong(tkd); };
+$('#cbTB').checked = cfg.tb !== false;
+$('#cbTB').onchange = e => { cfg.tb = e.target.checked; luuCfg(); };
+$('#gioBrief').value = cfg.gioBrief;
+$('#gioBrief').onchange = e => { cfg.gioBrief = e.target.value || '07:00'; luuCfg(); };
+$('#cbXe').checked = cfg.xe !== false;
+$('#cbXe').onchange = e => { cfg.xe = e.target.checked; luuCfg(); taiXe(); };
+$('#cbLe').checked = cfg.hieuUngLe !== false;
+$('#cbLe').onchange = e => { cfg.hieuUngLe = e.target.checked; luuCfg(); loaiHat = '__'; veLe(); };
+$('#cbDongBo').checked = cfg.dongBoGia !== false;
+$('#cbDongBo').onchange = e => { cfg.dongBoGia = e.target.checked; luuCfg(); $('#dongBoTt').textContent = cfg.dongBoGia ? 'Đang bật đồng bộ giá…' : 'Đã tắt đồng bộ giá (giá chỉ lưu trên máy này).'; dongBoGia(); };
+$('#maDongBo').value = cfg.maDongBo;
+$('#maDongBo').onchange = e => { cfg.maDongBo = e.target.value.trim().replace(/[^A-Za-z0-9_-]/g, '') || 'gia-a92d377f4162'; e.target.value = cfg.maDongBo; luuCfg(); dongBoGia(); };
+
+/* Độ đặc của nền — chỉnh ở cài đặt hoặc biểu tượng khay hệ thống */
+function datDoDac(v) {
+  document.documentElement.style.setProperty('--dodac', v);
+  $('#doDacCai').value = v;
+  ghi('w_dodac', v);
+  if (coMay) window.may.baoDoDac(v);
+}
+$('#doDacCai').oninput = e => datDoDac(+e.target.value);
+datDoDac(doc('w_dodac', 1));
+if (coMay) window.may.khiDoiDoDac(datDoDac);
+// Bản web: cho phép thông báo (iPhone chỉ cho khi đã thêm app vào Màn hình chính) và đăng ký service worker để dùng được khi mất mạng
+$('#btnTB').onclick = async e => {
+  if (typeof Notification === 'undefined') { e.target.textContent = 'Thiết bị chưa hỗ trợ'; return; }
+  try { const p = await Notification.requestPermission(); e.target.textContent = p === 'granted' ? 'Đã bật' : 'Chưa được phép'; } catch { e.target.textContent = 'Không bật được'; }
+};
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});
+
+/* ========= ĐỒNG BỘ APP LÚA GẠO ========= */
+let ngDB = null;  // dữ liệu cache cuối cùng
+
+function ngFmt(n) { return n ? (+n).toLocaleString('vi-VN') : '—'; }
+function ngEsc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+
+function ngHienGia(sp) {
+  const gia = sp.price || sp.cost || 0;
+  const giaNhap = sp.cost || 0;
+  return `<div style="display:flex;justify-content:space-between;align-items:center;padding:.35rem .5rem;border-radius:6px;background:var(--nen2);margin:.25rem 0">
+    <span style="flex:1;min-width:0"><b style="font-size:.82rem">${ngEsc(sp.name||sp.ma)}</b> <span style="font-size:.7rem;opacity:.6">${ngEsc(sp.ma)}</span></span>
+    <span style="text-align:right;white-space:nowrap;margin-left:.5rem">
+      <span style="font-size:.72rem;opacity:.6">Nhập: ${ngFmt(giaNhap)}đ</span><br>
+      <b style="color:var(--vang)">${ngFmt(gia)}đ</b>/<span style="font-size:.7rem;opacity:.7">${ngEsc(sp.unit||'bao')}</span>
+    </span>
+  </div>`;
+}
+
+function ngLocSP() {
+  const q = ($('#ngTimSP').value||'').trim().toLowerCase();
+  const el = $('#ngGia');
+  if (!ngDB || !ngDB.products) { el.innerHTML = '<p style="opacity:.5;font-size:.8rem">Chưa sync</p>'; return; }
+  let ds = ngDB.products.filter(sp => sp.tinhTrang !== 'Ngưng kinh doanh');
+  if (q) ds = ds.filter(sp => {
+    const s = ((sp.ma||'')+(sp.name||'')+(sp.dam||'')).toLowerCase();
+    return s.includes(q) || (q.match(/\d+/) && String(sp.dam||'').includes(q.replace(/[^0-9]/g,'')));
+  });
+  if (!ds.length) { el.innerHTML = '<p style="opacity:.5;font-size:.8rem">Không tìm thấy</p>'; return; }
+  el.innerHTML = ds.slice(0,30).map(ngHienGia).join('') + (ds.length>30 ? `<p style="opacity:.5;font-size:.7rem;text-align:center">… còn ${ds.length-30} sản phẩm, hãy lọc thêm</p>` : '');
+}
+
+function ngLocKH() {
+  const q = ($('#ngTimKH').value||'').trim().toLowerCase();
+  const el = $('#ngKhach');
+  if (!ngDB || !ngDB.customers) { el.innerHTML = '<p style="opacity:.5;font-size:.8rem">Chưa sync</p>'; return; }
+  let ds = ngDB.customers;
+  if (q) ds = ds.filter(kh => ((kh.name||'')+(kh.phone||'')+(kh.address||'')).toLowerCase().includes(q));
+  if (!ds.length) { el.innerHTML = '<p style="opacity:.5;font-size:.8rem">Không tìm thấy</p>'; return; }
+  el.innerHTML = ds.slice(0,20).map(kh => `<div style="display:flex;justify-content:space-between;padding:.3rem .5rem;border-radius:6px;background:var(--nen2);margin:.2rem 0;font-size:.8rem">
+    <span><b>${ngEsc(kh.name)}</b>${kh.address?' — '+ngEsc(kh.address):''}</span>
+    <span style="opacity:.6">${ngEsc(kh.phone||'')}</span>
+  </div>`).join('');
+}
+
+function ngHienLich(events) {
+  const el = $('#ngLich');
+  if (!events || !events.length) { el.innerHTML = '<p style="opacity:.5;font-size:.8rem">Không có lịch</p>'; return; }
+  const now = Date.now();
+  const upcoming = events.filter(ev => {
+    if (!ev.date) return false;
+    const d = new Date(ev.date + (ev.time ? 'T'+ev.time : 'T00:00'));
+    return d.getTime() >= now - 86400000;
+  }).sort((a,b) => (a.date+a.time) > (b.date+b.time) ? 1 : -1).slice(0,10);
+  if (!upcoming.length) { el.innerHTML = '<p style="opacity:.5;font-size:.8rem">Không có lịch sắp tới</p>'; return; }
+  el.innerHTML = upcoming.map(ev => {
+    const d = new Date(ev.date + (ev.time ? 'T'+ev.time : 'T00:00'));
+    const label = d.toLocaleDateString('vi-VN', {weekday:'short',day:'numeric',month:'numeric'}) + (ev.time ? ' ' + ev.time : '');
+    return `<div style="display:flex;gap:.5rem;align-items:baseline;padding:.3rem .5rem;border-radius:6px;background:var(--nen2);margin:.2rem 0;font-size:.8rem">
+      <span style="color:var(--xanh);min-width:5rem">${label}</span>
+      <span>${ngEsc(ev.title||ev.name||ev.noidung||'')}</span>
+    </div>`;
+  }).join('');
+}
+
+function ngHienThi() {
+  if (!ngDB) return;
+  ngLocSP();
+  ngLocKH();
+  const events = ngDB.events || ngDB.lich || [];
+  ngHienLich(events);
+}
+
+$('#ngSync').onclick = async () => {
+  const btn = $('#ngSync');
+  const st = $('#ngStatus');
+  btn.disabled = true;
+  btn.textContent = '⏳';
+  st.textContent = 'Đang tải…';
+  try {
+    const res = await window.may.ng.sync();
+    if (res.ok) {
+      ngDB = res.db;
+      const spCount = (ngDB.products||[]).length;
+      const khCount = (ngDB.customers||[]).length;
+      st.textContent = (res.offline ? '📦 Cache' : '✅') + ` ${spCount} SP, ${khCount} KH` + (res.cacheLuc ? ' · ' + new Date(res.cacheLuc).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}) : '');
+      ngHienThi();
+    } else {
+      st.textContent = '❌ ' + (res.loi||'Lỗi không xác định');
+    }
+  } catch(e) {
+    st.textContent = '❌ ' + e.message;
+  }
+  btn.disabled = false;
+  btn.textContent = '🔄 Sync';
+};
+
+// Tải cache khi mở widget (không cần mở trình duyệt ẩn)
+(async () => {
+  if (!window.may || !window.may.ng) return;
+  try {
+    const res = await window.may.ng.cache();
+    if (res.ok) {
+      ngDB = res.db;
+      const spCount = (ngDB.products||[]).length;
+      const khCount = (ngDB.customers||[]).length;
+      $('#ngStatus').textContent = `📦 Cache ${spCount} SP, ${khCount} KH · ${new Date(res.cacheLuc).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})}`;
+      ngHienThi();
+    }
+  } catch {}
+})();
+</script>
+</body>
+</html>
