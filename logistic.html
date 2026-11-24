@@ -666,6 +666,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
 		print-color-adjust: exact;
 		}
 	}
+.routeCard{background:rgba(15,23,42,.92);color:#fff;border:1px solid #22c55e55;border-radius:14px;padding:10px 14px;box-shadow:0 6px 20px #0006;font-family:inherit;min-width:150px}
+.routeCard .rc-km{font-size:22px;font-weight:800;color:#34d399;line-height:1.1}
+.routeCard .rc-sub{font-size:12px;color:#cbd5e1;margin-top:4px;line-height:1.5}
+.routeCard .rc-tag{display:inline-block;background:#22c55e26;color:#34d399;border-radius:6px;padding:1px 6px;font-size:11px;font-weight:700}
+.ptag{font-weight:700;font-size:12px;border:0;border-radius:8px;padding:3px 9px;color:#fff;box-shadow:0 2px 8px #0006}
+.ptagA{background:#16a34a}.ptagB{background:#dc2626}
+.ptagA:before,.ptagB:before{display:none}
 </style>
 <style>
   :root{
@@ -951,13 +958,14 @@ function boHuyen(t){
   return String(t||'')
     .replace(/\s*\((huyện|quận|thị xã|thành phố|tp\.?|thị trấn)[^)]*\)/gi,'')
     .replace(/,\s*(huyện|quận|thị xã|thành phố|tp\.?)\s[^,]*/gi,'')
-    .replace(/\s+cũ\b/gi,'')
+    .replace(/\s+cũ(?![\p{L}])/giu,'')
+    .replace(/^[^(]*\)\s*$/,m=>m.replace(/\)/g,''))
     .replace(/\s{2,}/g,' ').replace(/\s+,/g,',').trim();
 }
 function fmt(n){return n==null?'—':n.toLocaleString('vi-VN');}
 function renderInfo(x){
   const el=document.getElementById('content');
-  const merged=boHuyen((x.merged||[]).join('|')).split('|').filter(m=>m&&!/^\d+ phần\)?$/.test(m.trim())).map(m=>`<span>${m.replace(/\s*\(.*$/,'')}</span>`).join('')||'<span>—</span>';
+  const merged=boHuyen((x.merged||[]).join('|')).split('|').filter(m=>m&&!/^\d+ phần\)?$/.test(m.trim())).map(m=>`<span>${m.replace(/\s*\(.*$/,'').replace(/\)/g,'')}</span>`).join('')||'<span>—</span>';
 
   // clear radius layer unless we're in radius mode
   if(nbMode!=='radius' && radiusLayer){map.removeLayer(radiusLayer);radiusLayer=null;}
@@ -1115,7 +1123,7 @@ function confirmBox(msg){
 const dealerLayer=L.layerGroup().addTo(map);
 let baseMarker=null, routeLayer=null, planLayer=null;
 let planSel=new Set();
-function clearRoute(){if(routeLayer){map.removeLayer(routeLayer);routeLayer=null;}}
+function clearRoute(){try{if(window._routeCard){map.removeControl(window._routeCard);window._routeCard=null;}}catch(e){}if(routeLayer){map.removeLayer(routeLayer);routeLayer=null;}}
 
 function refreshBase(){
   document.getElementById('baseLbl').textContent = BASE ? (BASE.label||'Đã đặt') : 'Chưa đặt';
@@ -1207,6 +1215,17 @@ function drawRoutes(routes, act){
     L.geoJSON(rt.geometry,{style:{color:i===act?'#22c55e':'#9aa7bf',
       weight:i===act?6:4,opacity:i===act?0.9:0.5,dashArray:i===act?null:'7,7'}}).addTo(routeLayer);
   });
+  try{
+    const cs=routes[act].geometry.coordinates, a=cs[0], b=cs[cs.length-1];
+    L.circleMarker([a[1],a[0]],{radius:8,color:'#fff',weight:3,fillColor:'#22c55e',fillOpacity:1}).bindTooltip('Điểm xuất phát',{permanent:true,direction:'top',className:'ptag ptagA'}).addTo(routeLayer);
+    L.circleMarker([b[1],b[0]],{radius:8,color:'#fff',weight:3,fillColor:'#ef4444',fillOpacity:1}).bindTooltip('Điểm đến',{permanent:true,direction:'top',className:'ptag ptagB'}).addTo(routeLayer);
+    if(window._routeCard) map.removeControl(window._routeCard);
+    const rc=L.control({position:'topleft'});
+    rc.onAdd=function(){const d=L.DomUtil.create('div','routeCard');
+      d.innerHTML='<div class="rc-km">'+routes[act].km.toFixed(1)+' km</div><div class="rc-sub"><span class="rc-tag">Đường bộ thực tế</span><br>Thời gian đi: ~'+Math.round(routes[act].min)+' phút</div>';
+      return d;};
+    rc.addTo(map); window._routeCard=rc;
+  }catch(e){}
   try{map.fitBounds(L.geoJSON(routes[act].geometry).getBounds(),{padding:[40,40]});}catch(e){}
 }
 function updateFromBase(obj){
