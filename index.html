@@ -459,6 +459,14 @@ label.viec.monTat{opacity:.7}
       </div>
     </section>
 
+    <section data-k="logistic" data-tab="tien">
+      <h2><button class="tt" aria-expanded="true">Logistic xã · đo đường</button><span class="ph">bản đồ</span></h2>
+      <div class="ruot">
+        <p class="trong">Gõ tên xã/phường để biết thuộc tỉnh nào, xem ranh giới, các xã lân cận, khóm/ấp và đo quãng đường xe chạy.</p>
+        <div class="cuoi"><button id="moLogistic" class="bat" style="width:100%;padding:9px">🗺️ Mở bản đồ Logistic xã</button></div>
+      </div>
+    </section>
+
     <section data-k="ctdt" data-tab="tien">
       <h2><button class="tt" aria-expanded="true">Môn học Thú y (tick môn đã học)</button><span class="ph" id="monTom"></span></h2>
       <div class="ruot">
@@ -1726,6 +1734,8 @@ $('#calTen').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preve
 $('#ngay').title = 'Bấm để xem lịch tuần, tháng';
 $('#ngay').addEventListener('click', () => { chonTab('lich'); calNeo = new Date(); calChon = khoaNgay(calNeo); dong.cal = false; apMuc.cal(); veCal(); $('[data-k=cal]').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
 veCal(); calSan = true; veViec();   // vẽ lại danh sách Việc khi các hàm lịch đã sẵn sàng
+
+$('#moLogistic').onclick = () => { if (coMay && typeof window.may.moLogistic === 'function') window.may.moLogistic(); else window.open('logistic.html', '_blank'); };
 
 /* ===== Chương trình đào tạo Cao đẳng Thú y 2024–2027: bạn tick môn mình học ===== */
 const MON = [
